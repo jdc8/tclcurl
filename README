@@ -1,0 +1,12 @@
+openssl build commands:
+
+    ./config --prefix=/home/decoster/curl/install/openssl
+    make
+    make install
+
+curl build commands:
+
+    export LD_LIBRARY_PATH=/home/decoster/curl/install/openssl/lib
+    ./configure --prefix=/home/decoster/curl/install/curl
+    make
+    make install
