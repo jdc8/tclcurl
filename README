@@ -1,12 +1,16 @@
-openssl build commands:
+openssl build commands: 0.9.8, 1.0.1f
 
     ./config --prefix=/home/decoster/curl/install/openssl
     make
     make install
 
-curl build commands:
+curl build commands: 7.34.0
 
     export LD_LIBRARY_PATH=/home/decoster/curl/install/openssl/lib
     ./configure --prefix=/home/decoster/curl/install/curl
     make
     make install
+
+tclcurl build commands:
+
+    tclsh build.tcl debug -static -curl /home/decoster/curl/install/curl -openssl /home/decoster/curl/install/openssl

@@ -44,7 +44,6 @@ critcl::tcl 8.5
 critcl::csources multi.c tclcurl.c
 critcl::tsources tclcurl_tcl.tcl
 
-
 critcl::ccode {
 
 #include "tclcurl.h"
