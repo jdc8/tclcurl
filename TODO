@@ -1,0 +1,99 @@
+- test with latest openssl
+
+- support latest curl (7.35)
+
+  - new curlsocktype CURLSOCKTYPE_ACCEPT (others not yet used in TclCurl)
+
+  - CURLSSH_AUTH_AGENT
+
+  - replace
+
+  /* Enable SSL/TLS for FTP, pick one of:
+     CURLFTPSSL_TRY     - try using SSL, proceed anyway otherwise
+     CURLFTPSSL_CONTROL - SSL for the control connection or fail
+     CURLFTPSSL_ALL     - SSL for all communication or fail
+  */
+  CINIT(USE_SSL, LONG, 119),
+
+    by
+
+  /* Enable SSL/TLS for FTP, pick one of:
+     CURLUSESSL_TRY     - try using SSL, proceed anyway otherwise
+     CURLUSESSL_CONTROL - SSL for the control connection or fail
+     CURLUSESSL_ALL     - SSL for all communication or fail
+  */
+  CINIT(USE_SSL, LONG, 119),
+
+  - new stuff:
+
+  /* Set the name servers to use for DNS resolution */
+  CINIT(DNS_SERVERS, OBJECTPOINT, 211),
+
+  /* Time-out accept operations (currently for FTP only) after this amount
+     of miliseconds. */
+  CINIT(ACCEPTTIMEOUT_MS, LONG, 212),
+
+  /* Set TCP keepalive */
+  CINIT(TCP_KEEPALIVE, LONG, 213),
+
+  /* non-universal keepalive knobs (Linux, AIX, HP-UX, more) */
+  CINIT(TCP_KEEPIDLE, LONG, 214),
+  CINIT(TCP_KEEPINTVL, LONG, 215),
+
+  /* Enable/disable specific SSL features with a bitmask, see CURLSSLOPT_* */
+  CINIT(SSL_OPTIONS, LONG, 216),
+
+  /* Set the SMTP auth originator */
+  CINIT(MAIL_AUTH, OBJECTPOINT, 217),
+
+  /* Enable/disable SASL initial response */
+  CINIT(SASL_IR, LONG, 218),
+
+  /* Function that will be called instead of the internal progress display
+   * function. This function should be defined as the curl_xferinfo_callback
+   * prototype defines. (Deprecates CURLOPT_PROGRESSFUNCTION) */
+  CINIT(XFERINFOFUNCTION, FUNCTIONPOINT, 219),
+
+  /* The XOAUTH2 bearer token */
+  CINIT(XOAUTH2_BEARER, OBJECTPOINT, 220),
+
+  /* Set the interface string to use as outgoing network
+   * interface for DNS requests.
+   * Only supported by the c-ares DNS backend */
+  CINIT(DNS_INTERFACE, OBJECTPOINT, 221),
+
+  /* Set the local IPv4 address to use for outgoing DNS requests.
+   * Only supported by the c-ares DNS backend */
+  CINIT(DNS_LOCAL_IP4, OBJECTPOINT, 222),
+
+  /* Set the local IPv4 address to use for outgoing DNS requests.
+   * Only supported by the c-ares DNS backend */
+  CINIT(DNS_LOCAL_IP6, OBJECTPOINT, 223),
+
+  /* Set authentication options directly */
+  CINIT(LOGIN_OPTIONS, OBJECTPOINT, 224),
+
+  - CURL_HTTP_VERSION_2_0
+
+  - CURL_SSLVERSION_TLSv1_0, CURL_SSLVERSION_TLSv1_1, CURL_SSLVERSION_TLSv1_2
+
+  - CURL_REDIR_POST_303
+
+  - curl_sslbackend and curl_tlssessioninfo
+
+  - CURLINFO_TLS_SESSION
+
+  - CURL_GLOBAL_ACK_EINTR
+
+  - CURLSHE_NOT_BUILT_IN
+
+  - CURL_VERSION_HTTP2
+
+- use curl-config
+
+- windows
+
+- http compatible httpcurl package
+
+
+
