@@ -941,7 +941,7 @@ curlSetOpts(Tcl_Interp *interp, struct curlObjData *curlData,
             Tcl_Free(curlData->progressProc);
             curlData->progressProc=curlstrdup(Tcl_GetString(objv));
             if (strcmp(curlData->progressProc,"")) {
-                if (curl_easy_setopt(curlHandle,CURLOPT_PROGRESSFUNCTION,
+                if (curl_easy_setopt(curlHandle,CURLOPT_XFERINFOFUNCTION,
                         curlProgressCallback)) {
                     return TCL_ERROR;
                 }
@@ -950,7 +950,7 @@ curlSetOpts(Tcl_Interp *interp, struct curlObjData *curlData,
                     return TCL_ERROR;
                 }
             } else {
-                if (curl_easy_setopt(curlHandle,CURLOPT_PROGRESSFUNCTION,NULL)) {
+                if (curl_easy_setopt(curlHandle,CURLOPT_XFERINFOFUNCTION,NULL)) {
                     return TCL_ERROR;
                 }
             }
@@ -2384,22 +2384,26 @@ curlBodyReader(void *ptr,size_t size,size_t nmemb,FILE *curlDataPtr) {
  *-----------------------------------------------------------------------
  */
 int
-curlProgressCallback(void *clientData,double dltotal,double dlnow,
-        double ultotal,double ulnow) {
+curlProgressCallback(void *clientData,curl_off_t dltotal,curl_off_t dlnow,
+        curl_off_t ultotal,curl_off_t ulnow) {
 
     struct curlObjData    *curlData=(struct curlObjData *)clientData;
     Tcl_Obj               *tclProcPtr;
-    char                   tclCommand[300];
 
-    snprintf(tclCommand,299,"%s %f %f %f %f",curlData->progressProc,dltotal,
-            dlnow,ultotal,ulnow);
-    tclProcPtr=Tcl_NewStringObj(tclCommand,-1);
     if (curlData->cancelTransVarName) {
         if (curlData->cancelTrans) {
             curlData->cancelTrans=0;
             return -1;
         }
     }
+
+    tclProcPtr = Tcl_NewListObj(0, 0);
+    Tcl_ListObjAppendElement(curlData->interp, tclProcPtr, Tcl_NewStringObj(curlData->progressProc, -1));
+    Tcl_ListObjAppendElement(curlData->interp, tclProcPtr, Tcl_NewWideIntObj(dltotal));
+    Tcl_ListObjAppendElement(curlData->interp, tclProcPtr, Tcl_NewWideIntObj(dlnow));
+    Tcl_ListObjAppendElement(curlData->interp, tclProcPtr, Tcl_NewWideIntObj(ultotal));
+    Tcl_ListObjAppendElement(curlData->interp, tclProcPtr, Tcl_NewWideIntObj(ulnow));
+
     if (Tcl_EvalObjEx(curlData->interp,tclProcPtr,TCL_EVAL_GLOBAL)!=TCL_OK) {
         return -1;
     }

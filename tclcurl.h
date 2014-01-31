@@ -428,8 +428,8 @@ size_t curlHeaderReader(void *ptr,size_t size,size_t nmemb,FILE *stream);
 
 size_t curlBodyReader(void *ptr,size_t size,size_t nmemb,FILE *curlDataPtr);
 
-int curlProgressCallback(void *clientp,double dltotal,double dlnow,
-        double ultotal,double ulnow);
+int curlProgressCallback(void *clientp,curl_off_t dltotal,curl_off_t dlnow,
+        curl_off_t ultotal,curl_off_t ulnow);
 
 size_t curlWriteProcInvoke(void *ptr,size_t size,size_t nmemb,FILE *curlDataPtr);
 size_t curlReadProcInvoke(void *ptr,size_t size,size_t nmemb,FILE *curlDataPtr);
