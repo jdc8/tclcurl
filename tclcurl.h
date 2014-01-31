@@ -285,7 +285,7 @@ CONST static char    *getInfoTable[]={
     "ftpentrypath",   "redirecturl",    "primaryip",
     "appconnecttime", "certinfo",       "conditionunmet",
     "primaryport",    "localip",        "localport",
-    (char *)NULL
+    "tlssession",     (char *)NULL
 };
 
 CONST static char   *curlFormTable[]={

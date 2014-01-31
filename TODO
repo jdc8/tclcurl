@@ -55,8 +55,6 @@
 
   - curl_sslbackend and curl_tlssessioninfo
 
-  - CURLINFO_TLS_SESSION
-
   - CURL_GLOBAL_ACK_EINTR
 
   - CURLSHE_NOT_BUILT_IN
