@@ -53,8 +53,6 @@
   /* Set authentication options directly */
   CINIT(LOGIN_OPTIONS, OBJECTPOINT, 224),
 
-  - CURL_REDIR_POST_303
-
   - curl_sslbackend and curl_tlssessioninfo
 
   - CURLINFO_TLS_SESSION

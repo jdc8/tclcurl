@@ -1610,6 +1610,9 @@ curlSetOpts(Tcl_Interp *interp, struct curlObjData *curlData,
                     longNumber=CURL_REDIR_POST_302;
                     break;
                 case 2:
+                    longNumber=CURL_REDIR_POST_303;
+                    break;
+                case 3:
                     longNumber=CURL_REDIR_POST_ALL;
                     break;
             }

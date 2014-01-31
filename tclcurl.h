@@ -356,7 +356,7 @@ CONST static char *sshauthtypes[] = {
 };
 
 CONST static char *postredir[] = {
-    "301", "302", "all", (char *)NULL
+    "301", "302", "303", "all", (char *)NULL
 };
 
 CONST static char *protocolNames[] = {
