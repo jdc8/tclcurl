@@ -4,26 +4,6 @@
 
   - new curlsocktype CURLSOCKTYPE_ACCEPT (others not yet used in TclCurl)
 
-  - CURLSSH_AUTH_AGENT
-
-  - replace
-
-  /* Enable SSL/TLS for FTP, pick one of:
-     CURLFTPSSL_TRY     - try using SSL, proceed anyway otherwise
-     CURLFTPSSL_CONTROL - SSL for the control connection or fail
-     CURLFTPSSL_ALL     - SSL for all communication or fail
-  */
-  CINIT(USE_SSL, LONG, 119),
-
-    by
-
-  /* Enable SSL/TLS for FTP, pick one of:
-     CURLUSESSL_TRY     - try using SSL, proceed anyway otherwise
-     CURLUSESSL_CONTROL - SSL for the control connection or fail
-     CURLUSESSL_ALL     - SSL for all communication or fail
-  */
-  CINIT(USE_SSL, LONG, 119),
-
   - new stuff:
 
   /* Set the name servers to use for DNS resolution */
@@ -72,8 +52,6 @@
 
   /* Set authentication options directly */
   CINIT(LOGIN_OPTIONS, OBJECTPOINT, 224),
-
-  - CURL_HTTP_VERSION_2_0
 
   - CURL_SSLVERSION_TLSv1_0, CURL_SSLVERSION_TLSv1_1, CURL_SSLVERSION_TLSv1_2
 

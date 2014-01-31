@@ -294,7 +294,7 @@ CONST static char   *curlFormTable[]={
 };
 
 CONST static char   *httpVersionTable[] = {
-    "none", "1.0", "1.1", (char *)NULL
+    "none", "1.0", "1.1", "2.0", (char *)NULL
 };
 
 CONST static char *netrcTable[] = {
