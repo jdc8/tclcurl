@@ -352,7 +352,7 @@ CONST static char *ftpfilemethod[] = {
 };
 
 CONST static char *sshauthtypes[] = {
-    "publickey", "password", "host", "keyboard", "any", (char *)NULL
+    "publickey", "password", "host", "keyboard", "any", "none", "agent", "default", (char *)NULL
 };
 
 CONST static char *postredir[] = {

@@ -1519,6 +1519,15 @@ curlSetOpts(Tcl_Interp *interp, struct curlObjData *curlData,
                 case 4:
                     longNumber=CURLSSH_AUTH_ANY;
                     break;
+                case 5:
+                    longNumber=CURLSSH_AUTH_NONE;
+                    break;
+                case 6:
+                    longNumber=CURLSSH_AUTH_AGENT;
+                    break;
+                case 7:
+                    longNumber=CURLSSH_AUTH_DEFAULT;
+                    break;
             }
             tmpObjPtr=Tcl_NewLongObj(longNumber);
             if (SetoptLong(interp,curlHandle,CURLOPT_SSH_AUTH_TYPES,
