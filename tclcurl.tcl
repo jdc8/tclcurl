@@ -317,11 +317,27 @@ critcl::ccommand ::curl::versioninfo {cd interp objc objv} {
                 Tcl_ListObjAppendElement(interp,resultObjPtr
                         ,Tcl_NewStringObj("SSPI",-1));
             }
-            break;
             if (infoPtr->features&CURL_VERSION_CONV) {
                 Tcl_ListObjAppendElement(interp,resultObjPtr
                         ,Tcl_NewStringObj("CONV",-1));
             }
+            if (infoPtr->features&CURL_VERSION_CURLDEBUG) {
+                Tcl_ListObjAppendElement(interp,resultObjPtr
+                        ,Tcl_NewStringObj("CURLDEBUG",-1));
+            }
+            if (infoPtr->features&CURL_VERSION_TLSAUTH_SRP) {
+                Tcl_ListObjAppendElement(interp,resultObjPtr
+                        ,Tcl_NewStringObj("TLSAUTH_SRP",-1));
+            }
+            if (infoPtr->features&CURL_VERSION_NTLM_WB) {
+                Tcl_ListObjAppendElement(interp,resultObjPtr
+                        ,Tcl_NewStringObj("NTLM_WB",-1));
+            }
+            if (infoPtr->features&CURL_VERSION_HTTP2) {
+                Tcl_ListObjAppendElement(interp,resultObjPtr
+                        ,Tcl_NewStringObj("HTTP2",-1));
+            }
+	    break;
         case 4:
             resultObjPtr=Tcl_NewStringObj(infoPtr->ssl_version,-1);
             break;

@@ -55,11 +55,9 @@
 
   - curl_sslbackend and curl_tlssessioninfo
 
-  - CURL_GLOBAL_ACK_EINTR
+  - CURL_GLOBAL_ACK_EINTR (curl_global_init not used in TclCurl)
 
-  - CURLSHE_NOT_BUILT_IN
-
-  - CURL_VERSION_HTTP2
+  - CURLSHE_NOT_BUILT_IN (not used in TclCurl)
 
 - use curl-config
 
