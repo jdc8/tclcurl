@@ -510,4 +510,4 @@ critcl::ccommand ::curl::multistrerror {cd interp objc objv} {
     return TCL_OK;
 }
 
-package provide TclCurl 7.22.0
+package provide TclCurl 7.35.0
