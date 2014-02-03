@@ -1,0 +1,227 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test token_command-1 {token command insufficient args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]]+ command arg \?arg\?"}
+
+tcltest::test token_command-2 {token command unknown option}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn -qwerty
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {bad command "-qwerty": must be setopt, perform, getinfo, cleanup, configure, duphandle, reset, pause, or resume}
+
+tcltest::test token_command-setopt-1 {token command setopt insufficient args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn setopt
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]]+ setopt option value"}
+
+tcltest::test token_command-setopt-2 {token command setopt too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn setopt a b c d e
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]]+ setopt option value"}
+
+tcltest::test token_command-setopt-3 {token command setopt unknown option}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn setopt qwerty azerty
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {bad option "qwerty": must be CURLOPT_URL, CURLOPT_FILE, CURLOPT_READDATA, CURLOPT_USERAGENT, CURLOPT_REFERER, CURLOPT_VERBOSE, CURLOPT_HEADER, CURLOPT_NOBODY, CURLOPT_PROXY, CURLOPT_PROXYPORT, CURLOPT_HTTPPROXYTUNNEL, CURLOPT_FAILONERROR, CURLOPT_TIMEOUT, CURLOPT_LOW_SPEED_LIMIT, CURLOPT_LOW_SPEED_TIME, CURLOPT_RESUME_FROM, CURLOPT_INFILESIZE, CURLOPT_UPLOAD, CURLOPT_FTPLISTONLY, CURLOPT_FTPAPPEND, CURLOPT_NETRC, CURLOPT_FOLLOWLOCATION, CURLOPT_TRANSFERTEXT, CURLOPT_PUT, CURLOPT_MUTE, CURLOPT_USERPWD, CURLOPT_PROXYUSERPWD, CURLOPT_RANGE, CURLOPT_ERRORBUFFER, CURLOPT_HTTPGET, CURLOPT_POST, CURLOPT_POSTFIELDS, CURLOPT_POSTFIELDSIZE, CURLOPT_FTPPORT, CURLOPT_COOKIE, CURLOPT_COOKIEFILE, CURLOPT_HTTPHEADER, CURLOPT_HTTPPOST, CURLOPT_SSLCERT, CURLOPT_SSLCERTPASSWD, CURLOPT_SSLVERSION, CURLOPT_CRLF, CURLOPT_QUOTE, CURLOPT_POSTQUOTE, CURLOPT_WRITEHEADER, CURLOPT_TIMECONDITION, CURLOPT_TIMEVALUE, CURLOPT_CUSTOMREQUEST, CURLOPT_STDERR, CURLOPT_INTERFACE, CURLOPT_KRB4LEVEL, CURLOPT_SSL_VERIFYPEER, CURLOPT_CAINFO, CURLOPT_FILETIME, CURLOPT_MAXREDIRS, CURLOPT_MAXCONNECTS, CURLOPT_CLOSEPOLICY, CURLOPT_RANDOM_FILE, CURLOPT_EGDSOCKET, CURLOPT_CONNECTTIMEOUT, CURLOPT_NOPROGRESS, CURLOPT_HEADERVAR, CURLOPT_BODYVAR, CURLOPT_PROGRESSPROC, CURLOPT_CANCELTRANSVARNAME, CURLOPT_WRITEPROC, CURLOPT_READPROC, CURLOPT_SSL_VERIFYHOST, CURLOPT_COOKIEJAR, CURLOPT_SSL_CIPHER_LIST, CURLOPT_HTTP_VERSION, CURLOPT_FTP_USE_EPSV, CURLOPT_SSLCERTTYPE, CURLOPT_SSLKEY, CURLOPT_SSLKEYTYPE, CURLOPT_SSLKEYPASSWD, CURLOPT_SSL_ENGINE, CURLOPT_SSL_ENGINEDEFAULT, CURLOPT_PREQUOTE, CURLOPT_DEBUGPROC, CURLOPT_DNS_CACHE_TIMEOUT, CURLOPT_DNS_USE_GLOBAL_CACHE, CURLOPT_COOKIESESSION, CURLOPT_CAPATH, CURLOPT_BUFFERSIZE, CURLOPT_NOSIGNAL, CURLOPT_ENCODING, CURLOPT_PROXYTYPE, CURLOPT_HTTP200ALIASES, CURLOPT_UNRESTRICTED_AUTH, CURLOPT_FTP_USE_EPRT, CURLOPT_NOSUCHOPTION, CURLOPT_HTTPAUTH, CURLOPT_FTP_CREATE_MISSING_DIRS, CURLOPT_PROXYAUTH, CURLOPT_FTP_RESPONSE_TIMEOUT, CURLOPT_IPRESOLVE, CURLOPT_MAXFILESIZE, CURLOPT_NETRC_FILE, CURLOPT_FTP_SSL, CURLOPT_SHARE, CURLOPT_PORT, CURLOPT_TCP_NODELAY, CURLOPT_AUTOREFERER, CURLOPT_SOURCE_HOST, CURLOPT_SOURCE_USERPWD, CURLOPT_SOURCE_PATH, CURLOPT_SOURCE_PORT, CURLOPT_PASV_HOST, CURLOPT_SOURCE_PREQUOTE, CURLOPT_SOURCE_POSTQUOTE, CURLOPT_FTPSSLAUTH, CURLOPT_SOURCE_URL, CURLOPT_SOURCE_QUOTE, CURLOPT_FTP_ACCOUNT, CURLOPT_IGNORE_CONTENT_LENGTH, CURLOPT_COOKIELIST, CURLOPT_FTP_SKIP_PASV_IP, CURLOPT_FTP_FILEMETHOD, CURLOPT_LOCALPORT, CURLOPT_LOCALPORTRANGE, CURLOPT_MAX_SEND_SPEED_LARGE, CURLOPT_MAX_RECV_SPEED_LARGE, CURLOPT_FTP_ALTERNATIVE_TO_USER, CURLOPT_SSL_SESSIONID_CACHE, CURLOPT_SSH_AUTH_TYPES, CURLOPT_SSH_PUBLIC_KEYFILE, CURLOPT_SSH_PRIVATE_KEYFILE, CURLOPT_TIMEOUT_MS, CURLOPT_CONNECTTIMEOUT_MS, CURLOPT_HTTP_CONTENT_DECODING, CURLOPT_HTTP_TRANSFER_DECODING, CURLOPT_KRBLEVEL, CURLOPT_NEW_FILE_PERMS, CURLOPT_NEW_DIRECTORY_PERMS, CURLOPT_KEYPASSWD, CURLOPT_APPEND, CURLOPT_DIRLISTONLY, CURLOPT_USE_SSL, CURLOPT_POST301, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, CURLOPT_PROXY_TRANSFER_MODE, CURLOPT_CRLFILE, CURLOPT_ISSUERCERT, CURLOPT_ADDRESS_SCOPE, CURLOPT_CERTINFO, CURLOPT_POSTREDIR, CURLOPT_USERNAME, CURLOPT_PASSWORD, CURLOPT_PROXYUSERNAME, CURLOPT_PROXYPASSWORD, CURLOPT_TFTP_BLKSIZE, CURLOPT_SOCKS5_GSSAPI_SERVICE, CURLOPT_SOCKS5_GSSAPI_NEC, CURLOPT_PROTOCOLS, CURLOPT_REDIR_PROTOCOLS, CURLOPT_FTP_SSL_CC, CURLOPT_SSH_KNOWNHOSTS, CURLOPT_SSH_KEYFUNCTION, CURLOPT_MAIL_FROM, CURLOPT_MAIL_RCPT, CURLOPT_FTP_USE_PRET, CURLOPT_WILDCARDMATCH, CURLOPT_CHUNK_BGN_PROC, CURLOPT_CHUNK_BGN_VAR, CURLOPT_CHUNK_END_PROC, CURLOPT_FNMATCH_PROC, CURLOPT_RESOLVE, CURLOPT_TLSAUTH_USERNAME, CURLOPT_TLSAUTH_PASSWORD, CURLOPT_GSSAPI_DELEGATION, CURLOPT_NOPROXY, or CURLOPT_TELNETOPTIONS}
+
+tcltest::test token_command-setopt-4 {token command setopt OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn setopt CURLOPT_VERBOSE 1
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {}
+
+tcltest::test token_command-perform-1 {token command perform too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn perform 1 2 3 4 5
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]]+ perform "}
+
+tcltest::test token_command-perform-2 {token command perform OK}  -setup {
+    set tkn [curl::init]
+    $tkn configure -url http://www.google.com -bodyvar body
+} -body {
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+    unset -nocomplain body
+} -returnCodes {ok} -result {0}
+
+tcltest::test token_command-perform-2 {token command perform NOK}  -setup {
+    set tkn [curl::init]
+    $tkn configure -url azerty -bodyvar body
+} -body {
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+    unset -nocomplain body
+} -returnCodes {error} -result {6}
+
+tcltest::test token_command-getinfo-1 {token command getinfo insufficient args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn getinfo
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]]+ getinfo option"}
+
+tcltest::test token_command-getinfo-2 {token command getinfo too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn getinfo a b c d e
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]]+ getinfo option"}
+
+tcltest::test token_command-getinfo-3 {token command getinfo invalid option}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn getinfo azerty
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {bad option "azerty": must be effectiveurl, httpcode, responsecode, filetime, totaltime, namelookuptime, connecttime, pretransfertime, sizeupload, sizedownload, speeddownload, speedupload, headersize, requestsize, sslverifyresult, contentlengthdownload, contentlengthupload, starttransfertime, contenttype, redirecttime, redirectcount, httpauthavail, proxyauthavail, oserrno, numconnects, sslengines, httpconnectcode, cookielist, ftpentrypath, redirecturl, primaryip, appconnecttime, certinfo, conditionunmet, primaryport, localip, localport, or tlssession}
+
+tcltest::test token_command-getinfo-4 {token command getinfo OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn getinfo httpcode
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test token_command-cleanup-1 {token command cleanup too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn cleanup a b c d e
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] cleanup "}
+
+tcltest::test token_command-cleanup-2 {token command cleanup OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn cleanup
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {ok} -result {}
+
+tcltest::test token_command-configure-1 {token command configure insufficient args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] configure option value \?option value \.\.\.\?"}
+
+tcltest::test token_command-configure-2 {token command configure insufficient args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure a
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] configure option value \?option value \.\.\.\?"}
+
+tcltest::test token_command-configure-3 {token command configure unknown args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure a b
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -result {bad option "a": must be -url, -file, -infile, -useragent, -referer, -verbose, -header, -nobody, -proxy, -proxyport, -httpproxytunnel, -failonerror, -timeout, -lowspeedlimit, -lowspeedtime, -resumefrom, -infilesize, -upload, -ftplistonly, -ftpappend, -netrc, -followlocation, -transfertext, -put, -mute, -userpwd, -proxyuserpwd, -range, -errorbuffer, -httpget, -post, -postfields, -postfieldssize, -ftpport, -cookie, -cookiefile, -httpheader, -httppost, -sslcert, -sslcertpasswd, -sslversion, -crlf, -quote, -postquote, -writeheader, -timecondition, -timevalue, -customrequest, -stderr, -interface, -krb4level, -sslverifypeer, -cainfo, -filetime, -maxredirs, -maxconnects, -closepolicy, -randomfile, -egdsocket, -connecttimeout, -noprogress, -headervar, -bodyvar, -progressproc, -canceltransvarname, -writeproc, -readproc, -sslverifyhost, -cookiejar, -sslcipherlist, -httpversion, -ftpuseepsv, -sslcerttype, -sslkey, -sslkeytype, -sslkeypasswd, -sslengine, -sslenginedefault, -prequote, -debugproc, -dnscachetimeout, -dnsuseglobalcache, -cookiesession, -capath, -buffersize, -nosignal, -encoding, -proxytype, -http200aliases, -unrestrictedauth, -ftpuseeprt, -command, -httpauth, -ftpcreatemissingdirs, -proxyauth, -ftpresponsetimeout, -ipresolve, -maxfilesize, -netrcfile, -ftpssl, -share, -port, -tcpnodelay, -autoreferer, -sourcehost, -sourceuserpwd, -sourcepath, -sourceport, -pasvhost, -sourceprequote, -sourcepostquote, -ftpsslauth, -sourceurl, -sourcequote, -ftpaccount, -ignorecontentlength, -cookielist, -ftpskippasvip, -ftpfilemethod, -localport, -localportrange, -maxsendspeed, -maxrecvspeed, -ftpalternativetouser, -sslsessionidcache, -sshauthtypes, -sshpublickeyfile, -sshprivatekeyfile, -timeoutms, -connecttimeoutms, -contentdecoding, -transferdecoding, -krblevel, -newfileperms, -newdirectoryperms, -keypasswd, -append, -dirlistonly, -usessl, -post301, -sshhostpublickeymd5, -proxytransfermode, -crlfile, -issuercert, -addressscope, -certinfo, -postredir, -username, -password, -proxyuser, -proxypassword, -tftpblksize, -socks5gssapiservice, -socks5gssapinec, -protocols, -redirprotocols, -ftpsslcc, -sshknownhosts, -sshkeyproc, -mailfrom, -mailrcpt, -ftpusepret, -wildcardmatch, -chunkbgnproc, -chunkbgnvar, -chunkendproc, -fnmatchproc, -resolve, -tlsauthusername, -tlsauthpassword, -gssapidelegation, -noproxy, or -telnetoptions}
+
+tcltest::test token_command-configure-3 {token command configure OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://www.google.com
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {ok} -result {}
+
+tcltest::test token_command-duphandle-1 {token command duphandle too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn duphandle a b c d e
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] duphandle "}
+
+tcltest::test token_command-duphandle-2 {token command duphandle OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn duphandle
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {ok} -match regexp -result {curl[[:digit:]]}
+
+tcltest::test token_command-reset-1 {token command reset too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn reset a b c d e
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] reset "}
+
+tcltest::test token_command-reset-2 {token command reset OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn reset
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {ok} -result {}
+
+tcltest::test token_command-pause-1 {token command pause too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn pause a b c d e
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] pause "}
+
+tcltest::test token_command-pause-2 {token command pause OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn pause
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {ok} -result {}
+
+tcltest::test token_command-resume-1 {token command resume too many args}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn resume a b c d e
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -match regexp -result {wrong # args: should be "curl[[:digit:]] resume "}
+
+tcltest::test token_command-resume-2 {token command resume OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn resume
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {ok} -result {}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

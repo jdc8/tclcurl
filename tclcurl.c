@@ -81,22 +81,29 @@ curlObjCmd (ClientData clientData, Tcl_Interp *interp,
     int                    tableIndex;
 
     if (objc<2) {
-        Tcl_WrongNumArgs(interp,1,objv,"option arg ?arg?");
+        Tcl_WrongNumArgs(interp,1,objv,"command arg ?arg?");
         return TCL_ERROR;
     }
-    if (Tcl_GetIndexFromObj(interp, objv[1], commandTable, "option",
+    if (Tcl_GetIndexFromObj(interp, objv[1], commandTable, "command",
             TCL_EXACT,&tableIndex)==TCL_ERROR) {
         return TCL_ERROR;
     }
 
     switch(tableIndex) {
         case 0:
+	    if (objc != 4) {
+		Tcl_WrongNumArgs(interp,2,objv,"option value");
+		return TCL_ERROR;
+	    }
             if (curlSetOptsTransfer(interp,curlData,objc,objv)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             break;
         case 1:
-/*            fprintf(stdout,"Perform\n"); */
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             if (curlPerform(interp,curlHandle,curlData)) {
                 if (curlData->errorBuffer!=NULL) {
                     if (curlData->errorBufferKey==NULL) {
@@ -112,9 +119,12 @@ curlObjCmd (ClientData clientData, Tcl_Interp *interp,
             }
             break;
         case 2:
-/*            fprintf(stdout,"Getinfo\n"); */
+	    if (objc != 3) {
+		Tcl_WrongNumArgs(interp,2,objv,"option");
+		return TCL_ERROR;
+	    }
             if (Tcl_GetIndexFromObj(interp,objv[2],getInfoTable,
-                    "getinfo option",TCL_EXACT,&tableIndex)==TCL_ERROR) {
+                    "option",TCL_EXACT,&tableIndex)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             if (curlGetInfo(interp,curlHandle,tableIndex)) {
@@ -122,36 +132,54 @@ curlObjCmd (ClientData clientData, Tcl_Interp *interp,
             }
             break;
         case 3:
-/*            fprintf(stdout,"Cleanup\n");  */
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             Tcl_DeleteCommandFromToken(interp,curlData->token);
             break;
         case 4:
-/*            fprintf(stdout,"Configure\n"); */
+	    if (objc < 4 || objc % 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"option value ?option value ...?");
+		return TCL_ERROR;
+	    }
             if (curlConfigTransfer(interp,curlData,objc,objv)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             break;
         case 5:
-/*            fprintf(stdout,"DupHandle\n"); */
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             if (curlDupHandle(interp,curlData,objc,objv)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             break;
         case 6:
-/*            fprintf(stdout,"Reset\n");     */
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             if (curlResetHandle(interp,curlData)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             break;
         case 7:
-/*            fprintf(stdout,"Pause\n");     */
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             if (curl_easy_pause(curlData->curl,CURLPAUSE_ALL)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             break;
 
         case 8:
-/*            fprintf(stdout,"Resume\n");     */
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             if (curl_easy_pause(curlData->curl,CURLPAUSE_CONT)==TCL_ERROR) {
                 return TCL_ERROR;
             }
@@ -292,12 +320,6 @@ curlConfigTransfer(Tcl_Interp *interp, struct curlObjData *curlData,
     for(i=2,j=3;i<objc;i=i+2,j=j+2) {
         if (Tcl_GetIndexFromObj(interp, objv[i], configTable, "option", 
                 TCL_EXACT, &tableIndex)==TCL_ERROR) {
-            return TCL_ERROR;
-        }
-        if (i==objc-1) {
-            snprintf(errorMsg,500,"Empty value for %s",configTable[tableIndex]);
-            resultPtr=Tcl_NewStringObj(errorMsg,-1);
-            Tcl_SetObjResult(interp,resultPtr);            
             return TCL_ERROR;
         }
         if (curlSetOpts(interp,curlData,objv[j],tableIndex)==TCL_ERROR) {
