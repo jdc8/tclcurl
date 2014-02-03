@@ -1,0 +1,73 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test versioninfo-1 {curl::versioninfo insufficient arguments}  -setup {
+} -body {
+    curl::versioninfo
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::versioninfo -option"}
+
+tcltest::test versioninfo-2 {curl::versioninfo too many arguments}  -setup {
+} -body {
+    curl::versioninfo
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::versioninfo -option"}
+
+tcltest::test versioninfo-3 {curl::versioninfo unknown arguments}  -setup {
+} -body {
+    curl::versioninfo -qwerty
+} -cleanup {
+} -returnCodes {error} -result {bad option "-qwerty": must be -version, -versionnum, -host, -features, -sslversion, -sslversionnum, -libzversion, or -protocols}
+
+tcltest::test versioninfo-4 {curl::versioninfo -version OK}  -setup {
+} -body {
+    curl::versioninfo -version
+} -cleanup {
+} -returnCodes {ok} -match regexp -result {[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+}
+
+tcltest::test versioninfo-5 {curl::versioninfo -versionnum OK}  -setup {
+} -body {
+    curl::versioninfo -versionnum
+} -cleanup {
+} -returnCodes {ok} -match regexp -result {[[:digit:]]+}
+
+tcltest::test versioninfo-6 {curl::versioninfo -host OK}  -setup {
+} -body {
+    curl::versioninfo -host
+} -cleanup {
+} -returnCodes {ok} -match glob -result {*}
+
+tcltest::test versioninfo-7 {curl::versioninfo -features OK}  -setup {
+} -body {
+    curl::versioninfo -features
+} -cleanup {
+} -returnCodes {ok} -match glob -result {*}
+
+tcltest::test versioninfo-8 {curl::versioninfo -sslversion OK}  -setup {
+} -body {
+    curl::versioninfo -sslversion
+} -cleanup {
+} -returnCodes {ok} -match glob -result {*}
+
+tcltest::test versioninfo-9 {curl::versioninfo -sslversionnum OK}  -setup {
+} -body {
+    curl::versioninfo -sslversionnum
+} -cleanup {
+} -returnCodes {ok} -match regexp -result {[[:digit:]]+}
+
+tcltest::test versioninfo-10 {curl::versioninfo -libzversion OK}  -setup {
+} -body {
+    curl::versioninfo -libzversion
+} -cleanup {
+} -returnCodes {ok} -match regexp -result {[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+}
+
+tcltest::test versioninfo-11 {curl::versioninfo -protocols OK}  -setup {
+} -body {
+    curl::versioninfo -protocols
+} -cleanup {
+} -returnCodes {ok} -match glob -result {*}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

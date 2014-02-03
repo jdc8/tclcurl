@@ -1,0 +1,20 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test multiinit-1 {curl::multiinit OK}  -setup {
+} -body {
+    set tkn [curl::multiinit]
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {mcurl*}
+
+tcltest::test multiinit-2 {curl::multiinit too many args}  -setup {
+} -body {
+    set tkn [curl::multiinit 1 2 3 4]
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::multiinit "}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

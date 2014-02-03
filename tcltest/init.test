@@ -1,0 +1,20 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test init-1 {curl::init OK}  -setup {
+} -body {
+    set tkn [curl::init]
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {curl*}
+
+tcltest::test init-2 {curl::init too many args}  -setup {
+} -body {
+    set tkn [curl::init 1 2 3 4]
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::init "}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

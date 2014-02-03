@@ -1,0 +1,19 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test version-1 {curl::version OK}  -setup {
+} -body {
+    curl::version
+} -cleanup {
+} -returnCodes {ok} -match glob -result {TclCurl Version 7.35.0 *}
+
+tcltest::test version-2 {curl::version too many args}  -setup {
+} -body {
+    curl::version 1 2 3 4
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::version "}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

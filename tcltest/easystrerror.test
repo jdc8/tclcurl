@@ -1,0 +1,37 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test easystrerror-1 {curl::easystrerror insufficient arguments}  -setup {
+} -body {
+    curl::easystrerror
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::easystrerror errorCode"}
+
+tcltest::test easystrerror-2 {curl::easystrerror too many arguments}  -setup {
+} -body {
+    curl::easystrerror 1 2 3 4
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::easystrerror errorCode"}
+
+tcltest::test easystrerror-3 {curl::easystrerror OK}  -setup {
+} -body {
+    curl::easystrerror 0
+} -cleanup {
+} -returnCodes {ok} -match exact -result {No error}
+
+tcltest::test easystrerror-4 {curl::easystrerror OK}  -setup {
+} -body {
+    curl::easystrerror 1
+} -cleanup {
+} -returnCodes {ok} -match exact -result {Unsupported protocol}
+
+tcltest::test easystrerror-5 {curl::easystrerror OK}  -setup {
+} -body {
+    curl::easystrerror -1
+} -cleanup {
+} -returnCodes {ok} -match exact -result {Unknown error}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

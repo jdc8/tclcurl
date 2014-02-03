@@ -1,0 +1,37 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test sharestrerror-1 {curl::sharestrerror insufficient arguments}  -setup {
+} -body {
+    curl::sharestrerror
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::sharestrerror errorCode"}
+
+tcltest::test sharestrerror-2 {curl::sharestrerror too many arguments}  -setup {
+} -body {
+    curl::sharestrerror 1 2 3 4
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::sharestrerror errorCode"}
+
+tcltest::test sharestrerror-3 {curl::sharestrerror OK}  -setup {
+} -body {
+    curl::sharestrerror 0
+} -cleanup {
+} -returnCodes {ok} -match exact -result {No error}
+
+tcltest::test sharestrerror-4 {curl::sharestrerror OK}  -setup {
+} -body {
+    curl::sharestrerror 1
+} -cleanup {
+} -returnCodes {ok} -match exact -result {Unknown share option}
+
+tcltest::test sharestrerror-5 {curl::sharestrerror OK}  -setup {
+} -body {
+    curl::sharestrerror -1
+} -cleanup {
+} -returnCodes {ok} -match exact -result {CURLSHcode unknown}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

@@ -1,0 +1,20 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test shareinit-1 {curl::shareinit OK}  -setup {
+} -body {
+    set stkn [curl::shareinit]
+} -cleanup {
+    $stkn cleanup
+} -returnCodes {ok} -match glob -result {scurl*}
+
+tcltest::test shareinit-2 {curl::shareinit too many args}  -setup {
+} -body {
+    set tkn [curl::shareinit 1 2 3 4]
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::shareinit "}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

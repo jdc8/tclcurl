@@ -1,0 +1,43 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test multistrerror-1 {curl::multistrerror insufficient arguments}  -setup {
+} -body {
+    curl::multistrerror
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::multistrerror errorCode"}
+
+tcltest::test multistrerror-2 {curl::multistrerror too many arguments}  -setup {
+} -body {
+    curl::multistrerror 1 2 3 4
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::multistrerror errorCode"}
+
+tcltest::test multistrerror-3 {curl::multistrerror OK}  -setup {
+    set multi [curl::multiinit]
+} -body {
+    curl::multistrerror 0
+} -cleanup {
+    $multi cleanup
+} -returnCodes {ok} -match exact -result {No error}
+
+tcltest::test multistrerror-4 {curl::multistrerror OK}  -setup {
+    set multi [curl::multiinit]
+} -body {
+    curl::multistrerror 1
+} -cleanup {
+    $multi cleanup
+} -returnCodes {ok} -match exact -result {Invalid multi handle}
+
+tcltest::test multistrerror-5 {curl::multistrerror OK}  -setup {
+    set multi [curl::multiinit]
+} -body {
+    curl::multistrerror -1
+} -cleanup {
+    $multi cleanup
+} -returnCodes {ok} -match exact -result {Please call curl_multi_perform() soon}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

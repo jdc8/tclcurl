@@ -1,0 +1,25 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test escape-1 {curl::escape OK}  -setup {
+} -body {
+    curl::escape {http://www.google.com?q=a b}
+} -cleanup {
+} -returnCodes {ok} -match glob -result {http%3A%2F%2Fwww.google.com%3Fq%3Da%20b}
+
+tcltest::test escape-2 {curl::escape insufficient arguments}  -setup {
+} -body {
+    curl::escape
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::escape url"}
+
+tcltest::test escape-3 {curl::escape too many args}  -setup {
+} -body {
+    curl::escape 1 2 3 4
+} -cleanup {
+} -returnCodes {error} -match exact -result {wrong # args: should be "curl::escape url"}
+
+# cleanup
+::tcltest::cleanupTests
+return
+
