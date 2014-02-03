@@ -47,6 +47,7 @@ critcl::tsources tclcurl_tcl.tcl
 critcl::ccode {
 
 #include "tclcurl.h"
+#include "multi.h"
 
 #include <sys/types.h>
 #ifdef _WIN32
@@ -507,6 +508,60 @@ critcl::ccommand ::curl::multistrerror {cd interp objc objv} {
     if (curlErrorStrings(interp,objv[1],2)) {
         return TCL_ERROR;
     }
+    return TCL_OK;
+}
+
+#/*
+#*----------------------------------------------------------------------
+#*
+#* curlInitMultiObjCmd --
+#*
+#*	This procedure is invoked to process the "curl::multiinit" Tcl command.
+#*	See the user documentation for details on what it does.
+#*
+#* Results:
+#*	A standard Tcl result.
+#*
+#* Side effects:
+#*	See the user documentation.
+#*
+#*----------------------------------------------------------------------
+#*/
+critcl::ccommand ::curl::multiinit {cd interp objc objv} {
+
+    Tcl_Obj                     *result;
+    struct curlMultiObjData     *curlMultiData;
+    char                        *multiHandleName;
+
+    if (objc != 1) {
+	Tcl_WrongNumArgs(interp, 1, objv, "");
+        return TCL_ERROR;
+    }
+
+    curlMultiData=(struct curlMultiObjData *)Tcl_Alloc(sizeof(struct curlMultiObjData));
+    if (curlMultiData==NULL) {
+        result=Tcl_NewStringObj("Couldn't allocate memory",-1);
+        Tcl_SetObjResult(interp,result); 
+        return TCL_ERROR;
+    }
+
+    memset(curlMultiData, 0, sizeof(struct curlMultiObjData));
+    curlMultiData->interp=interp;
+
+    curlMultiData->mcurl=curl_multi_init();
+
+    if (curlMultiData->mcurl==NULL) {
+        result=Tcl_NewStringObj("Couldn't open curl multi handle",-1);
+        Tcl_SetObjResult(interp,result); 
+        return TCL_ERROR;
+    }
+
+    multiHandleName=curlCreateMultiObjCmd(interp,curlMultiData);
+
+    result=Tcl_NewStringObj(multiHandleName,-1);
+    Tcl_SetObjResult(interp,result);
+    Tcl_Free(multiHandleName);
+
     return TCL_OK;
 }
 

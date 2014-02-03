@@ -11,6 +11,9 @@
  *
  */
 
+#ifndef tclcurl_h
+#define tclcurl_h
+
 #if (defined(WIN32) || defined(_WIN32))
 #define CURL_STATICLIB 1
 #endif
@@ -509,4 +512,6 @@ int curlMultiStringError (ClientData clientData, Tcl_Interp *interp,
 
 #ifdef  __cplusplus
 }
+#endif
+
 #endif
