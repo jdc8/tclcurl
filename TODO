@@ -63,7 +63,7 @@
 
 - windows
 
-- http compatible httpcurl package
+- http compatible httpcurl 'shim' package?
 
 
 

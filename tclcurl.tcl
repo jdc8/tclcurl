@@ -40,7 +40,7 @@ if {[file exists "[file dirname [info script]]/tclcurl_config.tcl"]} {
     close $fd
 }
 
-critcl::tcl 8.5
+critcl::tcl 8.6
 critcl::csources multi.c tclcurl.c
 critcl::tsources tclcurl_tcl.tcl
 
@@ -75,15 +75,20 @@ critcl::ccode {
 #*/
 critcl::ccommand ::curl::init {cd interp objc objv} {
 
-    Tcl_Obj             *resultPtr;
+    Tcl_Obj             *resultObjPtr;
     CURL                *curlHandle;
     struct curlObjData  *curlData;
     char                *handleName;
 
+    if (objc != 1) {
+	Tcl_WrongNumArgs(interp, 1, objv, "");
+        return TCL_ERROR;
+    }
+
     curlData=(struct curlObjData *)Tcl_Alloc(sizeof(struct curlObjData));
     if (curlData==NULL) {
-        resultPtr=Tcl_NewStringObj("Couldn't allocate memory",-1);
-        Tcl_SetObjResult(interp,resultPtr);
+        resultObjPtr=Tcl_NewStringObj("Couldn't allocate memory",-1);
+        Tcl_SetObjResult(interp,resultObjPtr);
         return TCL_ERROR;
     }
 
@@ -92,8 +97,8 @@ critcl::ccommand ::curl::init {cd interp objc objv} {
 
     curlHandle=curl_easy_init();
     if (curlHandle==NULL) {
-        resultPtr=Tcl_NewStringObj("Couldn't open curl handle",-1);
-        Tcl_SetObjResult(interp,resultPtr);
+        resultObjPtr=Tcl_NewStringObj("Couldn't open curl handle",-1);
+        Tcl_SetObjResult(interp,resultObjPtr);
         return TCL_ERROR;
     }
 
@@ -101,8 +106,8 @@ critcl::ccommand ::curl::init {cd interp objc objv} {
 
     curlData->curl=curlHandle;
 
-    resultPtr=Tcl_NewStringObj(handleName,-1);
-    Tcl_SetObjResult(interp,resultPtr);
+    resultObjPtr=Tcl_NewStringObj(handleName,-1);
+    Tcl_SetObjResult(interp,resultObjPtr);
     Tcl_Free(handleName);
 
     return TCL_OK;
@@ -131,6 +136,11 @@ critcl::ccommand ::curl::version {cd interp objc objv} {
 
     Tcl_Obj     *versionPtr;
     char        tclversion[200];
+
+    if (objc != 1) {
+	Tcl_WrongNumArgs(interp, 1, objv, "");
+        return TCL_ERROR;
+    }
 
     sprintf(tclversion,"TclCurl Version %s (%s)",TclCurlVersion,
                                                  curl_version());
@@ -164,6 +174,11 @@ critcl::ccommand ::curl::escape {cd interp objc objv} {
 
     Tcl_Obj        *resultObj;
     char           *escapedStr;
+
+    if (objc != 2) {
+	Tcl_WrongNumArgs(interp, 1, objv, "url");
+        return TCL_ERROR;
+    }
 
     escapedStr=curl_easy_escape(NULL,Tcl_GetString(objv[1]),0);
 
@@ -203,6 +218,11 @@ critcl::ccommand ::curl::unescape {cd interp objc objv} {
 
     Tcl_Obj        *resultObj;
     char           *unescapedStr;
+
+    if (objc != 2) {
+	Tcl_WrongNumArgs(interp, 1, objv, "url");
+        return TCL_ERROR;
+    }
 
     unescapedStr=curl_easy_unescape(NULL,Tcl_GetString(objv[1]),0,NULL);
     if(!unescapedStr) {
@@ -244,9 +264,8 @@ critcl::ccommand ::curl::versioninfo {cd interp objc objv} {
     Tcl_Obj                       *resultObjPtr=NULL;
     char                           tmp[7];
 
-    if (objc!=2) {
-        resultObjPtr=Tcl_NewStringObj("usage: curl::versioninfo -option",-1);
-        Tcl_SetObjResult(interp,resultObjPtr); 
+    if (objc != 2) {
+	Tcl_WrongNumArgs(interp, 1, objv, "-option");
         return TCL_ERROR;
     }
 
@@ -388,6 +407,11 @@ critcl::ccommand ::curl::shareinit {cd interp objc objv} {
     struct shcurlObjData  *shcurlData;
     char                  *shandleName;
 
+    if (objc != 1) {
+	Tcl_WrongNumArgs(interp, 1, objv, "");
+        return TCL_ERROR;
+    }
+
     shcurlData=(struct shcurlObjData *)Tcl_Alloc(sizeof(struct shcurlObjData));
     if (shcurlData==NULL) {
         resultPtr=Tcl_NewStringObj("Couldn't allocate memory",-1);
@@ -440,7 +464,7 @@ critcl::ccommand ::curl::shareinit {cd interp objc objv} {
 critcl::ccommand ::curl::easystrerror {cd interp objc objv} {
 
 
-    if (objc<2) {
+    if (objc != 2) {
         Tcl_WrongNumArgs(interp,1,objv,"errorCode");
         return TCL_ERROR;
     }
@@ -470,7 +494,7 @@ critcl::ccommand ::curl::easystrerror {cd interp objc objv} {
 #*/
 critcl::ccommand ::curl::sharestrerror {cd interp objc objv} {
 
-    if (objc<2) {
+    if (objc != 2) {
         Tcl_WrongNumArgs(interp,1,objv,"errorCode");
         return TCL_ERROR;
     }
@@ -500,7 +524,7 @@ critcl::ccommand ::curl::sharestrerror {cd interp objc objv} {
 #*/
 critcl::ccommand ::curl::multistrerror {cd interp objc objv} {
 
-    if (objc<2) {
+    if (objc != 2) {
         Tcl_WrongNumArgs(interp,1,objv,"errorCode");
         return TCL_ERROR;
     }
