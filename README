@@ -4,13 +4,23 @@ openssl build commands: 0.9.8, 1.0.1f
     make
     make install
 
-curl build commands: 7.34.0
+curl build commands Linux: 7.35.0
 
     export LD_LIBRARY_PATH=/home/decoster/curl/install/openssl/lib
     ./configure --prefix=/home/decoster/curl/install/curl
     make
     make install
 
-tclcurl build commands:
+curl build command Windows: 7.35.0 + VC12_32bit
+
+    cd curl-7.35.0\winbuild
+    nmake /f makefile.vc mode=static VC=10
+
+tclcurl build commands Linux:
 
     tclsh build.tcl debug -static -curl /home/decoster/curl/install/curl -openssl /home/decoster/curl/install/openssl
+
+
+tclcurl build command Windows:
+
+    c:\tmp\tclcurl\tclcurl>c:\tcl\bin\tclsh86.exe build.tcl install -static -curl C:\tmp\tclcurl\curl-7.35.0\builds\libcurl-vc10-x86-release-static-ipv6-sspi-spnego -winssl
