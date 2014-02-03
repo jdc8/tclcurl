@@ -1,0 +1,14 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test multi_command-1 {multi command insufficient args}  -setup {
+    set tkn [curl::multiinit]
+} -body {
+    $tkn
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "mcurl[[:digit:]]+ command arg \?arg\?"}
+
+# cleanup
+::tcltest::cleanupTests
+return

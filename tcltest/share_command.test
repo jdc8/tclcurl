@@ -1,0 +1,14 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test share_command-1 {share command insufficient args}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -match regexp -result {wrong # args: should be "scurl[[:digit:]]+ command arg \?arg\?"}
+
+# cleanup
+::tcltest::cleanupTests
+return

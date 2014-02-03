@@ -84,10 +84,10 @@ curlMultiObjCmd (ClientData clientData, Tcl_Interp *interp,
     int                         tableIndex;
 
     if (objc<2) {
-        Tcl_WrongNumArgs(interp,1,objv,"option arg ?arg?");
+        Tcl_WrongNumArgs(interp,1,objv,"command arg ?arg?");
         return TCL_ERROR;
     }
-    if (Tcl_GetIndexFromObj(interp, objv[1], multiCommandTable, "option",
+    if (Tcl_GetIndexFromObj(interp, objv[1], multiCommandTable, "command",
             TCL_EXACT,&tableIndex)==TCL_ERROR) {
         return TCL_ERROR;
     }
