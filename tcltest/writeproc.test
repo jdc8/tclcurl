@@ -4,6 +4,7 @@ package require -exact TclCurl 7.35.0
 proc writeToFile {data} {
     incr ::writeproc_size [string length $data]
     incr ::writeproc_count
+    append ::writeproc_data $data
 }
 
 tcltest::test writeproc-1 {writeproc OK}  -setup {
@@ -11,12 +12,14 @@ tcltest::test writeproc-1 {writeproc OK}  -setup {
 } -body {
     set ::writeproc_size 0
     set ::writeproc_count 0
+    set ::writeproc_data ""
     $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile
     $tkn perform
     set ::writeproc_size
 } -cleanup {
     unset -nocomplain ::writeproc_size
     unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
     $tkn cleanup
 } -returnCodes {ok} -result {1000000}
 
@@ -25,12 +28,14 @@ tcltest::test writeproc-2 {writeproc smaller buffer OK}  -setup {
 } -body {
     set ::writeproc_size 0
     set ::writeproc_count 0
+    set ::writeproc_data ""
     $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -buffersize 2500
     $tkn perform
     set ::writeproc_count
 } -cleanup {
     unset -nocomplain ::writeproc_size
     unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
     $tkn cleanup
 } -returnCodes {ok} -result {401}
 
@@ -39,12 +44,14 @@ tcltest::test writeproc-3 {writeproc with range OK}  -setup {
 } -body {
     set ::writeproc_size 0
     set ::writeproc_count 0
+    set ::writeproc_data ""
     $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -range {1000-4999}
     $tkn perform
     set ::writeproc_size
 } -cleanup {
     unset -nocomplain ::writeproc_size
     unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
     $tkn cleanup
 } -returnCodes {ok} -result {4000}
 
@@ -53,12 +60,14 @@ tcltest::test writeproc-4 {writeproc with resume OK}  -setup {
 } -body {
     set ::writeproc_size 0
     set ::writeproc_count 0
+    set ::writeproc_data ""
     $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -resumefrom 900000
     $tkn perform
     set ::writeproc_size
 } -cleanup {
     unset -nocomplain ::writeproc_size
     unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
     $tkn cleanup
 } -returnCodes {ok} -result {100000}
 
@@ -67,14 +76,48 @@ tcltest::test writeproc-5 {writeproc with timeout zero}  -setup {
 } -body {
     set ::writeproc_size 0
     set ::writeproc_count 0
+    set ::writeproc_data ""
     $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -timeout 1
     $tkn perform
     set ::writeproc_size
 } -cleanup {
     unset -nocomplain ::writeproc_size
     unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
     $tkn cleanup
 } -returnCodes {ok} -result {1000000}
+
+tcltest::test writeproc-6 {writeproc nobody}  -setup {
+    set tkn [curl::init]
+} -body {
+    set ::writeproc_size 0
+    set ::writeproc_count 0
+    set ::writeproc_data ""
+    $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -nobody 1
+    $tkn perform
+    set ::writeproc_size
+} -cleanup {
+    unset -nocomplain ::writeproc_size
+    unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test writeproc-7 {writeproc nobody but header}  -setup {
+    set tkn [curl::init]
+} -body {
+    set ::writeproc_size 0
+    set ::writeproc_count 0
+    set ::writeproc_data ""
+    $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -nobody 1 -header 1
+    $tkn perform
+    string match -nocase {*Content-Length: 1000000*} $::writeproc_data
+} -cleanup {
+    unset -nocomplain ::writeproc_size
+    unset -nocomplain ::writeproc_count
+    unset -nocomplain ::writeproc_data
+    $tkn cleanup
+} -returnCodes {ok} -result {1}
 
 # cleanup
 ::tcltest::cleanupTests
