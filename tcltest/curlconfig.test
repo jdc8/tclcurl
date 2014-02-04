@@ -1,0 +1,25 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test curlconfig-1 {curl::curlConfig insufficient arguments}  -setup {
+} -body {
+    curl::curlConfig
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::curlConfig option"}
+
+tcltest::test version-2 {curl::version too many args}  -setup {
+} -body {
+    curl::curlConfig 1 2 3 4
+} -cleanup {
+} -returnCodes {error} -result {wrong # args: should be "curl::curlConfig option"}
+
+tcltest::test version-3 {curl::version unsupported option}  -setup {
+} -body {
+    curl::curlConfig -azerty
+} -cleanup {
+} -returnCodes {error} -result {bad option '-azerty': must be '-prefix', '-feature', '-vernum' or '-ca'}
+
+# cleanup
+::tcltest::cleanupTests
+return
+
