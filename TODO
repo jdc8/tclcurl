@@ -1,6 +1,8 @@
 - curl token -command: what when callback failes (see command.test command-2
   test, it returns the callback error message, but not error is raised)
 
+- token configure -timeout decimal values?
+
 - use curl-config ?
 
 - tests

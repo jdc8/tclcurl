@@ -62,6 +62,20 @@ tcltest::test writeproc-4 {writeproc with resume OK}  -setup {
     $tkn cleanup
 } -returnCodes {ok} -result {100000}
 
+tcltest::test writeproc-5 {writeproc with timeout zero}  -setup {
+    set tkn [curl::init]
+} -body {
+    set ::writeproc_size 0
+    set ::writeproc_count 0
+    $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -timeout 1
+    $tkn perform
+    set ::writeproc_size
+} -cleanup {
+    unset -nocomplain ::writeproc_size
+    unset -nocomplain ::writeproc_count
+    $tkn cleanup
+} -returnCodes {ok} -result {1000000}
+
 # cleanup
 ::tcltest::cleanupTests
 return
