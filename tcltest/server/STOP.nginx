@@ -1,0 +1,14 @@
+#!/bin/bash
+
+dir=$(pwd $(dirname $0))
+
+if [[ -z "$NGINXPATH" ]] ; then
+    if [ -x /usr/local/sbin/nginx ] ; then
+        NGINXPATH=/usr/local/sbin/nginx
+    else
+        NGINXPATH=nginx
+    fi
+fi
+
+sudo $NGINXPATH -p $dir -c $dir/nginx.conf $flags -s stop
+

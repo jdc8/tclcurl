@@ -1,0 +1,25 @@
+#!/bin/bash
+
+trap "terminate 1" SIGINT
+trap "terminate 0" SIGKILL SIGTERM
+
+dir=$(pwd $0)
+echo $dir
+
+if [[ -z "$NGINXPATH" ]] ; then
+    if [ -x /usr/local/sbin/nginx ] ; then
+        NGINXPATH=/usr/local/sbin/nginx
+    else
+        NGINXPATH=nginx
+    fi
+fi
+
+terminate() {
+    if [ $1 -eq 1 ]; then
+        bash $dir/STOP.nginx
+    fi
+    echo Interrupted >&2
+    exit
+}
+
+sudo $NGINXPATH -p $dir -c $dir/nginx.conf
