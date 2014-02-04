@@ -1,0 +1,20 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test stderrprogress-1 {stderrprogress OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -noprogress 0 -stderr error.txt
+    $tkn perform
+    set f [open error.txt r]
+    set txt [read $f]
+    close $f
+    file delete error.txt
+    set txt
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {*Average*Speed*Dload*Upload*}
+
+# cleanup
+::tcltest::cleanupTests
+return
