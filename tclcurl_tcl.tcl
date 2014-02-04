@@ -69,8 +69,7 @@ proc ::curl::transfer {args} {
     catch {unset getInfo}
 
     if {[llength $args]==0} {
-        puts "No transfer configured"
-        return
+        error "No transfer configured"
     }
 
     foreach {option value} $args {

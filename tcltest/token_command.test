@@ -59,7 +59,7 @@ tcltest::test token_command-perform-1 {token command perform too many args}  -se
 
 tcltest::test token_command-perform-2 {token command perform OK}  -setup {
     set tkn [curl::init]
-    $tkn configure -url http://www.google.com -bodyvar body
+    $tkn configure -url http://localhost:9080 -bodyvar body
 } -body {
     $tkn perform
 } -cleanup {
@@ -152,7 +152,7 @@ tcltest::test token_command-configure-3 {token command configure unknown args}  
 tcltest::test token_command-configure-3 {token command configure OK}  -setup {
     set tkn [curl::init]
 } -body {
-    $tkn configure -url http://www.google.com
+    $tkn configure -url http://localhost:8090
 } -cleanup {
     catch {$tkn cleanup}
 } -returnCodes {ok} -result {}

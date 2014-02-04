@@ -1,0 +1,18 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test transfer-1 {curl::transfer insufficient args}  -setup {
+} -body {
+    curl::transfer
+} -cleanup {
+} -returnCodes {error} -result {No transfer configured}
+
+tcltest::test transfer-2 {curl::transfer OK}  -setup {
+} -body {
+    curl::transfer -url http://localhost:9080
+} -cleanup {
+} -returnCodes {ok} -result {0}
+
+# cleanup
+::tcltest::cleanupTests
+return
