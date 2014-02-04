@@ -1,0 +1,39 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+proc writeToFile {data} {
+    incr ::writeproc_size [string length $data]
+    incr ::writeproc_count
+}
+
+tcltest::test writeproc-1 {writeproc OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    set ::writeproc_size 0
+    set ::writeproc_count 0
+    $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile
+    $tkn perform
+    set ::writeproc_size
+} -cleanup {
+    unset -nocomplain ::writeproc_size
+    unset -nocomplain ::writeproc_count
+    $tkn cleanup
+} -returnCodes {ok} -result {1000000}
+
+tcltest::test writeproc-2 {writeproc smaller buffer OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    set ::writeproc_size 0
+    set ::writeproc_count 0
+    $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -buffersize 2500
+    $tkn perform
+    set ::writeproc_count
+} -cleanup {
+    unset -nocomplain ::writeproc_size
+    unset -nocomplain ::writeproc_count
+    $tkn cleanup
+} -returnCodes {ok} -result {401}
+
+# cleanup
+::tcltest::cleanupTests
+return
