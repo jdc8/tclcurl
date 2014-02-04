@@ -72,6 +72,10 @@ proc ::curl::transfer {args} {
         error "No transfer configured"
     }
 
+    if {[llength $args] % 2 != 0} {
+        error "Missing value for option '[lindex $args end]'"
+    }
+
     foreach {option value} $args {
         set noPassOption 0
         set block        1

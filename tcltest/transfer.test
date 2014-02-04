@@ -7,11 +7,23 @@ tcltest::test transfer-1 {curl::transfer insufficient args}  -setup {
 } -cleanup {
 } -returnCodes {error} -result {No transfer configured}
 
-tcltest::test transfer-2 {curl::transfer OK}  -setup {
+tcltest::test transfer-2 {curl::transfer insufficient args}  -setup {
+} -body {
+    curl::transfer a
+} -cleanup {
+} -returnCodes {error} -result {Missing value for option 'a'}
+
+tcltest::test transfer-3 {curl::transfer OK}  -setup {
 } -body {
     curl::transfer -url http://localhost:9080
 } -cleanup {
 } -returnCodes {ok} -result {0}
+
+tcltest::test transfer-4 {curl::transfer unknown option}  -setup {
+} -body {
+    curl::transfer -azerty http://localhost:9080
+} -cleanup {
+} -returnCodes {error} -result {bad option "-azerty": must be -url, -file, -infile, -useragent, -referer, -verbose, -header, -nobody, -proxy, -proxyport, -httpproxytunnel, -failonerror, -timeout, -lowspeedlimit, -lowspeedtime, -resumefrom, -infilesize, -upload, -ftplistonly, -ftpappend, -netrc, -followlocation, -transfertext, -put, -mute, -userpwd, -proxyuserpwd, -range, -errorbuffer, -httpget, -post, -postfields, -postfieldssize, -ftpport, -cookie, -cookiefile, -httpheader, -httppost, -sslcert, -sslcertpasswd, -sslversion, -crlf, -quote, -postquote, -writeheader, -timecondition, -timevalue, -customrequest, -stderr, -interface, -krb4level, -sslverifypeer, -cainfo, -filetime, -maxredirs, -maxconnects, -closepolicy, -randomfile, -egdsocket, -connecttimeout, -noprogress, -headervar, -bodyvar, -progressproc, -canceltransvarname, -writeproc, -readproc, -sslverifyhost, -cookiejar, -sslcipherlist, -httpversion, -ftpuseepsv, -sslcerttype, -sslkey, -sslkeytype, -sslkeypasswd, -sslengine, -sslenginedefault, -prequote, -debugproc, -dnscachetimeout, -dnsuseglobalcache, -cookiesession, -capath, -buffersize, -nosignal, -encoding, -proxytype, -http200aliases, -unrestrictedauth, -ftpuseeprt, -command, -httpauth, -ftpcreatemissingdirs, -proxyauth, -ftpresponsetimeout, -ipresolve, -maxfilesize, -netrcfile, -ftpssl, -share, -port, -tcpnodelay, -autoreferer, -sourcehost, -sourceuserpwd, -sourcepath, -sourceport, -pasvhost, -sourceprequote, -sourcepostquote, -ftpsslauth, -sourceurl, -sourcequote, -ftpaccount, -ignorecontentlength, -cookielist, -ftpskippasvip, -ftpfilemethod, -localport, -localportrange, -maxsendspeed, -maxrecvspeed, -ftpalternativetouser, -sslsessionidcache, -sshauthtypes, -sshpublickeyfile, -sshprivatekeyfile, -timeoutms, -connecttimeoutms, -contentdecoding, -transferdecoding, -krblevel, -newfileperms, -newdirectoryperms, -keypasswd, -append, -dirlistonly, -usessl, -post301, -sshhostpublickeymd5, -proxytransfermode, -crlfile, -issuercert, -addressscope, -certinfo, -postredir, -username, -password, -proxyuser, -proxypassword, -tftpblksize, -socks5gssapiservice, -socks5gssapinec, -protocols, -redirprotocols, -ftpsslcc, -sshknownhosts, -sshkeyproc, -mailfrom, -mailrcpt, -ftpusepret, -wildcardmatch, -chunkbgnproc, -chunkbgnvar, -chunkendproc, -fnmatchproc, -resolve, -tlsauthusername, -tlsauthpassword, -gssapidelegation, -noproxy, or -telnetoptions}
 
 # cleanup
 ::tcltest::cleanupTests
