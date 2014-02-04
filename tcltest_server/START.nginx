@@ -23,4 +23,4 @@ terminate() {
 }
 mkdir -p $dir/logs $dir/run
 
-sudo $NGINXPATH -p $dir -c $dir/nginx.conf
+sudo $NGINXPATH -p $dir/ -c $dir/nginx.conf
