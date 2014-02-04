@@ -21,5 +21,6 @@ terminate() {
     echo Interrupted >&2
     exit
 }
+mkdir -p $dir/logs $dir/run
 
 sudo $NGINXPATH -p $dir -c $dir/nginx.conf
