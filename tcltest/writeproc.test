@@ -34,6 +34,20 @@ tcltest::test writeproc-2 {writeproc smaller buffer OK}  -setup {
     $tkn cleanup
 } -returnCodes {ok} -result {401}
 
+tcltest::test writeproc-3 {writeproc with range OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    set ::writeproc_size 0
+    set ::writeproc_count 0
+    $tkn configure -url http://localhost:9080/large.bin -writeproc writeToFile -range {1000-4999}
+    $tkn perform
+    set ::writeproc_size
+} -cleanup {
+    unset -nocomplain ::writeproc_size
+    unset -nocomplain ::writeproc_count
+    $tkn cleanup
+} -returnCodes {ok} -result {4000}
+
 # cleanup
 ::tcltest::cleanupTests
 return
