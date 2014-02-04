@@ -1,0 +1,16 @@
+Server for testing tclcurl
+==========================
+
+Before running the tests, create some large test files:
+
+     % tclsh gen_test_files.tcl
+
+and start the tclcurl nginx test server:
+
+     % cd tcltest_server
+     % ./START.nginx
+
+To stop the nginx test server:
+
+     % cd tcltest_server
+     % ./STOP.nginx
