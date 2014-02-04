@@ -1,0 +1,122 @@
+package require tcltest
+package require base64
+package require -exact TclCurl 7.35.0
+
+tcltest::test bodyvar-1 {bodyvar OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -bodyvar body
+    $tkn perform
+    set body
+} -cleanup {
+    unset -nocomplain body
+    $tkn cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+}
+
+tcltest::test bodyvar-2 {bodyvar 2 transfers OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -bodyvar body1
+    $tkn perform
+    $tkn configure -url http://localhost:9080/test.html -bodyvar body2
+    $tkn perform
+    append body1 $body2
+} -cleanup {
+    unset -nocomplain body1
+    unset -nocomplain body2
+    $tkn cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+<HTML><BODY>Test for TclCurl</BODY></HTML>
+}
+
+tcltest::test bodyvar-3 {bodyvar binary OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/logo64.gif -bodyvar body
+    $tkn perform
+    ::base64::encode $body
+} -cleanup {
+    unset -nocomplain body
+    $tkn cleanup
+} -returnCodes {ok} -result {R0lGODlhKwBAAPf/AP//////zP//mf//Zv//M///AP/M///MzP/Mmf/MZv/MM//MAP+Z//+ZzP+Z
+mf+ZZv+ZM/+ZAP9m//9mzP9mmf9mZv9mM/9mAP8z//8zzP8zmf8zZv8zM/8zAP8A//8AzP8Amf8A
+Zv8AM/8AAMz//8z/zMz/mcz/Zsz/M8z/AMzM/8zMzMzMmczMZszMM8zMAMyZ/8yZzMyZmcyZZsyZ
+M8yZAMxm/8xmzMxmmcxmZsxmM8xmAMwz/8wzzMwzmcwzZswzM8wzAMwA/8wAzMwAmcwAZswAM8wA
+AJn//5n/zJn/mZn/Zpn/M5n/AJnM/5nMzJnMmZnMZpnMM5nMAJmZ/5mZzJmZmZmZZpmZM5mZAJlm
+/5lmzJlmmZlmZplmM5lmAJkz/5kzzJkzmZkzZpkzM5kzAJkA/5kAzJkAmZkAZpkAM5kAAGb//2b/
+zGb/mWb/Zmb/M2b/AGbM/2bMzGbMmWbMZmbMM2bMAGaZ/2aZzGaZmWaZZmaZM2aZAGZm/2ZmzGZm
+mWZmZmZmM2ZmAGYz/2YzzGYzmWYzZmYzM2YzAGYA/2YAzGYAmWYAZmYAM2YAADP//zP/zDP/mTP/
+ZjP/MzP/ADPM/zPMzDPMmTPMZjPMMzPMADOZ/zOZzDOZmTOZZjOZMzOZADNm/zNmzDNmmTNmZjNm
+MzNmADMz/zMzzDMzmTMzZjMzMzMzADMA/zMAzDMAmTMAZjMAMzMAAAD//wD/zAD/mQD/ZgD/MwD/
+AADM/wDMzADMmQDMZgDMMwDMAACZ/wCZzACZmQCZZgCZMwCZAABm/wBmzABmmQBmZgBmMwBmAAAz
+/wAzzAAzmQAzZgAzMwAzAAAA/wAAzAAAmQAAZgAAM+4AAN0AALsAAKoAAIgAAHcAAFUAAEQAACIA
+ABEAAADuAADdAAC7AACqAACIAAB3AABVAABEAAAiAAARAAAA7gAA3QAAuwAAqgAAiAAAdwAAVQAA
+RAAAIgAAEe7u7t3d3bu7u6qqqoiIiHd3d1VVVURERCIiIhEREQAAACwAAAAAKwBAAAAI/wABCBxI
+sCDBevYOKHRwwKDDgvUUHkDgoKKMGTky5tABpCOQICBBAsnR8KHBAx9DqlzJsiUQGRIpWpShMWHL
+mzhztrRXL6XOn0CDAAHQM6jRnEMB+Lx5JOSRpkdX6hC4tOWOkDWuRlWZg2rOBTueRihQYytXry2P
+7FgQRC1bsypnCNTBtEaNpmChOm1rVIbAHEx3hN0RQS/fBwccGHXwN3DbCGGdAjlQ78kTHYZxMgYA
+WGcElUeA1MuDzJkzfUFLdg5cGGToA3lMmz6UujHOI5D1Oogte1VQ0QJneHZaoYps02RU5g7yWWVS
+ADKGh7xXWjYibCoXFMYdWeTA6DmbH//Jwdu0b6Eh8wbRGnKqQMU5tR6RUR05GXz1cuDF2fW9zu5W
+HGcaMsg84YBazbXUHwDw/QQEIAKa9gw+DmSTVWYhyeUfUECQEqEzqxygX4It+SXQAb95GOE+KK2H
+YUibAYAihyoKmM+B7N0U44xAqUhKfTLQ9VNJMgLV1CogAlIdKTO8yBKR9nAYBJKH5CObPlXdBJxA
+RelUEZJd6GEeXw4elOVKRyDwhIdhIscRhwWduZIDHj6TgyfmrYDZT+4NJKdTMni4SqAD3vPnWQN1
+eRuhg6qIDAJB9UnUoW09AGGjppFyIJwDRanTERVAeAg+1QGyaZkD8XibDlYeQp1p+jz/4ORKzxXp
+YKuvOjOGrBzWkyqHXTjjanVd6Nfrr0DlgMywpq0GFJEN5hQaMqvc4+EhFjirE7RGBkHKKvh4eN+p
+Qw4ULU4frYKpM8jIMOtKCJj703gHkPKMDHg6Q4qxQMV4Lk7U3ctbPkC8q1KM4H2ag4c4xNbuUQgb
+pWwXxpGyZ1AmAiCcUfroY9wY2PU1kLY/3UdbVBpyBhpOM7gbhAM+6QWEAxevtKCzQu7VVg4HHgFz
+SB2FJOJTLN0MtKJAvDlezxlBJaLQOSRd9Mjt1UPXETM4wPNTWx+hg7GTbRzEATPMkGWfOYtW8NjR
+fbR0U0CIjQC/CiGA4XNpA3B1RUFca50DpCCZDRICZr9G0r/PLYVRSBullJHbUYP0eGgbfV1V4qDp
+RbRrMqe0eVtP3e0nXFttSSnpO6GFulENKbr6s5O+zrqtDp7+E2M8epRRyxUpVA9CEtVd0fAyFF+2
+RhnpoEPrCPhu0vPQPxQQADs=}
+
+tcltest::test bodyvar-4 {bodyvar text and binary transfers OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -bodyvar body1
+    $tkn perform
+    $tkn configure -url http://localhost:9080/logo64.gif -bodyvar bodyi
+    $tkn perform
+    $tkn configure -url http://localhost:9080/test.html -bodyvar body2
+    $tkn perform
+    append body1 $body2 [::base64::encode $bodyi]
+} -cleanup {
+    unset -nocomplain body1
+    unset -nocomplain body2
+    $tkn cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+<HTML><BODY>Test for TclCurl</BODY></HTML>
+R0lGODlhKwBAAPf/AP//////zP//mf//Zv//M///AP/M///MzP/Mmf/MZv/MM//MAP+Z//+ZzP+Z
+mf+ZZv+ZM/+ZAP9m//9mzP9mmf9mZv9mM/9mAP8z//8zzP8zmf8zZv8zM/8zAP8A//8AzP8Amf8A
+Zv8AM/8AAMz//8z/zMz/mcz/Zsz/M8z/AMzM/8zMzMzMmczMZszMM8zMAMyZ/8yZzMyZmcyZZsyZ
+M8yZAMxm/8xmzMxmmcxmZsxmM8xmAMwz/8wzzMwzmcwzZswzM8wzAMwA/8wAzMwAmcwAZswAM8wA
+AJn//5n/zJn/mZn/Zpn/M5n/AJnM/5nMzJnMmZnMZpnMM5nMAJmZ/5mZzJmZmZmZZpmZM5mZAJlm
+/5lmzJlmmZlmZplmM5lmAJkz/5kzzJkzmZkzZpkzM5kzAJkA/5kAzJkAmZkAZpkAM5kAAGb//2b/
+zGb/mWb/Zmb/M2b/AGbM/2bMzGbMmWbMZmbMM2bMAGaZ/2aZzGaZmWaZZmaZM2aZAGZm/2ZmzGZm
+mWZmZmZmM2ZmAGYz/2YzzGYzmWYzZmYzM2YzAGYA/2YAzGYAmWYAZmYAM2YAADP//zP/zDP/mTP/
+ZjP/MzP/ADPM/zPMzDPMmTPMZjPMMzPMADOZ/zOZzDOZmTOZZjOZMzOZADNm/zNmzDNmmTNmZjNm
+MzNmADMz/zMzzDMzmTMzZjMzMzMzADMA/zMAzDMAmTMAZjMAMzMAAAD//wD/zAD/mQD/ZgD/MwD/
+AADM/wDMzADMmQDMZgDMMwDMAACZ/wCZzACZmQCZZgCZMwCZAABm/wBmzABmmQBmZgBmMwBmAAAz
+/wAzzAAzmQAzZgAzMwAzAAAA/wAAzAAAmQAAZgAAM+4AAN0AALsAAKoAAIgAAHcAAFUAAEQAACIA
+ABEAAADuAADdAAC7AACqAACIAAB3AABVAABEAAAiAAARAAAA7gAA3QAAuwAAqgAAiAAAdwAAVQAA
+RAAAIgAAEe7u7t3d3bu7u6qqqoiIiHd3d1VVVURERCIiIhEREQAAACwAAAAAKwBAAAAI/wABCBxI
+sCDBevYOKHRwwKDDgvUUHkDgoKKMGTky5tABpCOQICBBAsnR8KHBAx9DqlzJsiUQGRIpWpShMWHL
+mzhztrRXL6XOn0CDAAHQM6jRnEMB+Lx5JOSRpkdX6hC4tOWOkDWuRlWZg2rOBTueRihQYytXry2P
+7FgQRC1bsypnCNTBtEaNpmChOm1rVIbAHEx3hN0RQS/fBwccGHXwN3DbCGGdAjlQ78kTHYZxMgYA
+WGcElUeA1MuDzJkzfUFLdg5cGGToA3lMmz6UujHOI5D1Oogte1VQ0QJneHZaoYps02RU5g7yWWVS
+ADKGh7xXWjYibCoXFMYdWeTA6DmbH//Jwdu0b6Eh8wbRGnKqQMU5tR6RUR05GXz1cuDF2fW9zu5W
+HGcaMsg84YBazbXUHwDw/QQEIAKa9gw+DmSTVWYhyeUfUECQEqEzqxygX4It+SXQAb95GOE+KK2H
+YUibAYAihyoKmM+B7N0U44xAqUhKfTLQ9VNJMgLV1CogAlIdKTO8yBKR9nAYBJKH5CObPlXdBJxA
+RelUEZJd6GEeXw4elOVKRyDwhIdhIscRhwWduZIDHj6TgyfmrYDZT+4NJKdTMni4SqAD3vPnWQN1
+eRuhg6qIDAJB9UnUoW09AGGjppFyIJwDRanTERVAeAg+1QGyaZkD8XibDlYeQp1p+jz/4ORKzxXp
+YKuvOjOGrBzWkyqHXTjjanVd6Nfrr0DlgMywpq0GFJEN5hQaMqvc4+EhFjirE7RGBkHKKvh4eN+p
+Qw4ULU4frYKpM8jIMOtKCJj703gHkPKMDHg6Q4qxQMV4Lk7U3ctbPkC8q1KM4H2ag4c4xNbuUQgb
+pWwXxpGyZ1AmAiCcUfroY9wY2PU1kLY/3UdbVBpyBhpOM7gbhAM+6QWEAxevtKCzQu7VVg4HHgFz
+SB2FJOJTLN0MtKJAvDlezxlBJaLQOSRd9Mjt1UPXETM4wPNTWx+hg7GTbRzEATPMkGWfOYtW8NjR
+fbR0U0CIjQC/CiGA4XNpA3B1RUFca50DpCCZDRICZr9G0r/PLYVRSBullJHbUYP0eGgbfV1V4qDp
+RbRrMqe0eVtP3e0nXFttSSnpO6GFulENKbr6s5O+zrqtDp7+E2M8epRRyxUpVA9CEtVd0fAyFF+2
+RhnpoEPrCPhu0vPQPxQQADs=}
+
+# cleanup
+::tcltest::cleanupTests
+return
