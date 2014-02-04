@@ -17,4 +17,3 @@ tcltest::test init-2 {curl::init too many args}  -setup {
 # cleanup
 ::tcltest::cleanupTests
 return
-

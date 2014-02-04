@@ -1,0 +1,38 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+proc command-1_callback {args} {
+    incr ::command-1_count [lindex $args 0]
+}
+
+proc command-1_callback_with_error {args} {
+    error "command-1_callback_with_error failed"
+}
+
+tcltest::test command-1 {command callback OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -command {command-1_callback 1}
+    $tkn perform
+    $tkn perform
+    $tkn configure -url http://localhost:9080/index.html -command {command-1_callback 3}
+    $tkn perform
+    set ::command-1_count
+} -cleanup {
+    unset -nocomplain command-1_count
+    $tkn cleanup
+} -returnCodes {ok} -result {5}
+
+tcltest::test command-2 {command callback error}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -command {command-1_callback_with_error 1}
+    $tkn perform
+} -cleanup {
+    unset -nocomplain command-1_count
+    $tkn cleanup
+} -returnCodes {ok} -result {command-1_callback_with_error failed}
+
+# cleanup
+::tcltest::cleanupTests
+return
