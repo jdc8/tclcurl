@@ -29,6 +29,8 @@ Extract the server's certificate like this:
 
     % openssl s_client -showcerts -connect server.com:443 > certs.pem
 
+Put the certs.pem file in directory tcltest_server. The tests expect it to be there.
+
 and use it in https requests with option:
 
     -cainfo certs.pem

@@ -12,3 +12,4 @@ fi
 
 sudo $NGINXPATH -p $dir -c $dir/nginx.conf $flags -s stop
 
+kill $(ps ax | grep run_scgi | awk '{print $1 ; exit}' -)

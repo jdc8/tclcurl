@@ -38,4 +38,9 @@ server {
 
 	server_name $hostname;
 
+	location /scgi {
+	  include scgi_params;
+	  scgi_pass localhost:9999;
+	}
+
 }

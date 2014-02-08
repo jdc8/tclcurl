@@ -24,3 +24,5 @@ terminate() {
 mkdir -p $dir/logs $dir/run
 
 sudo $NGINXPATH -p $dir/ -c $dir/nginx.conf
+
+tclsh $dir/run_scgi.tcl &
