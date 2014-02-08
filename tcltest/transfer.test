@@ -31,6 +31,12 @@ tcltest::test transfer-5 {curl::transfer dict protocol OK}  -setup {
 } -cleanup {
 } -returnCodes {ok} -result {0}
 
+tcltest::test transfer-6 {curl::transfer interface OK}  -setup {
+} -body {
+    curl::transfer -url http://localhost:9080/index.html -interface 127.0.0.1 -nobody 1
+} -cleanup {
+} -returnCodes {ok} -result {0}
+
 # cleanup
 ::tcltest::cleanupTests
 return
