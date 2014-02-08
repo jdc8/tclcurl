@@ -1,0 +1,38 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test ssl-1 {ssl fails selfsigned }  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url https://localhost:9443/index.html -bodyvar body
+    $tkn perform
+} -cleanup {
+    unset -nocomplain body
+    $tkn cleanup
+} -returnCodes {error} -result {60}
+
+tcltest::test ssl-2 {ssl cainfo OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url https://localhost:9443/index.html -cainfo [file dirname [info script]]/../tcltest_server/certs.pem -bodyvar body
+    $tkn perform
+    set body
+} -cleanup {
+    unset -nocomplain body
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {<HTML>*}
+
+tcltest::test ssl-3 {ssl insecure OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url https://localhost:9443/index.html -sslverifypeer 0 -sslverifyhost 0 -bodyvar body
+    $tkn perform
+    set body
+} -cleanup {
+    unset -nocomplain body
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {<HTML>*}
+
+# cleanup
+::tcltest::cleanupTests
+return

@@ -1,0 +1,42 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+proc debugproc-1 {type data} {
+    global debugproc
+    switch -exact -- $type {
+	0 { incr debugproc(text) 1}
+	1 { incr debugproc(iheader) 1}
+	2 { incr debugproc(oheader) 1}
+	3 { incr debugproc(idata) 1}
+	4 { incr debugproc(odata) 1}
+	5 { incr debugproc(issldata) 1}
+	6 { incr debugproc(ossldata) 1}
+    }
+}
+
+tcltest::test debugproc-1 {debugproc OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -verbose 1 -debugproc debugproc-1
+    $tkn perform
+    expr {[info exists ::debugproc(text)] && [info exists ::debugproc(iheader)] && [info exists ::debugproc(idata)]}
+} -cleanup {
+    unset -nocomplain ::debugproc
+    $tkn cleanup
+} -returnCodes {ok} -result {1}
+
+tcltest::test debugproc-2 {debugproc OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url https://localhost:9443/index.html -verbose 1 -debugproc debugproc-1 -cainfo [file dirname [info script]]/../tcltest_server/certs.pem
+    $tkn perform
+    expr {[info exists ::debugproc(text)] && [info exists ::debugproc(iheader)] && [info exists ::debugproc(issldata)]}
+} -cleanup {
+    unset -nocomplain ::debugproc
+    $tkn cleanup
+} -returnCodes {ok} -result {1}
+
+# cleanup
+::tcltest::cleanupTests
+return
+

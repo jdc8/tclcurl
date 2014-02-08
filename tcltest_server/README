@@ -3,14 +3,39 @@ Server for testing tclcurl
 
 Before running the tests, create some large test files:
 
-     % tclsh gen_test_files.tcl
+    % tclsh gen_test_files.tcl
 
 and start the tclcurl nginx test server:
 
-     % cd tcltest_server
-     % ./START.nginx
+    % cd tcltest_server
+    % ./START.nginx
 
 To stop the nginx test server:
 
-     % cd tcltest_server
-     % ./STOP.nginx
+    % cd tcltest_server
+    % ./STOP.nginx
+
+To generate a certificate, create an ssl subdirectory and follow the
+instructions here. Execute the commands in the ssl subddirectory:
+
+    https://www.digitalocean.com/community/articles/how-to-create-a-ssl-certificate-on-nginx-for-ubuntu-12-04/
+
+Curl doesn't like self signed certificates:
+
+    http://curl.haxx.se/docs/sslcerts.html
+    http://curl.haxx.se/mail/archive-2012-01/0052.html
+
+Extract the server's certificate like this:
+
+    % openssl s_client -showcerts -connect server.com:443 > certs.pem
+
+and use it in https requests with option:
+
+    -cainfo certs.pem
+
+Or you can choose not to bother about all this and disable verification of the
+peer and host with options:
+
+    -sslverifypeer 0 -sslverifyhost 0
+
+These are the equivalent of curl option -k or --insecure
