@@ -189,6 +189,17 @@ tcltest::test token_command-reset-2 {token command reset OK}  -setup {
     catch {$tkn cleanup}
 } -returnCodes {ok} -result {}
 
+tcltest::test token_command-reset-3 {token command reset OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html
+    $tkn perform
+    $tkn reset
+    $tkn perform
+} -cleanup {
+    catch {$tkn cleanup}
+} -returnCodes {error} -result {3}
+
 tcltest::test token_command-pause-1 {token command pause too many args}  -setup {
     set tkn [curl::init]
 } -body {
