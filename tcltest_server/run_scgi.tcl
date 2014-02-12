@@ -11,8 +11,17 @@ proc handle_request {sock headers body} {
     $cgi input
     fconfigure $sock -translation binary
 
+    set uri [$cgi getRequestParam REQUEST_URI]
+
     set C ""
-    append C "From SCGI"
+    switch -exact -- $uri {
+	"/scgi/ua" {
+	    append C [$cgi getRequestParam HTTP_USER_AGENT]
+	}
+	default {
+	    append C "From SCGI"
+	}
+    }
 
     set H [$cgi header {test/plain; charset="utf-8"}]
     set buffer [encoding convertto utf-8 "Status: 200 OK\n$H\n$C"]
