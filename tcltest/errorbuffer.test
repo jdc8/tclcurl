@@ -1,0 +1,30 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test errorbuffer-1 {errorbuffer var}  -setup {
+    set tkn [curl::init]
+} -body {
+    unset -nocomplain errorMsg
+    $tkn configure -url noneexisting -errorbuffer errorMsg
+    catch {$tkn perform}
+    set errorMsg
+} -cleanup {
+    unset -nocomplain errorMsg
+    $tkn cleanup
+} -returnCodes {ok} -result {Couldn't resolve host 'noneexisting'}
+
+tcltest::test errorbuffer-2 {errorbuffer array var}  -setup {
+    set tkn [curl::init]
+} -body {
+    unset -nocomplain error(msg)
+    $tkn configure -url noneexisting -errorbuffer error(msg)
+    catch {$tkn perform}
+    set error(msg)
+} -cleanup {
+    unset -nocomplain error(msg)
+    $tkn cleanup
+} -returnCodes {ok} -result {Couldn't resolve host 'noneexisting'}
+
+# cleanup
+::tcltest::cleanupTests
+return
