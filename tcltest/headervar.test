@@ -1,0 +1,18 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test headervar-1 {failonerror OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    unset -nocomplain errorMsg
+    $tkn configure -url http://localhost:9080/index.html -header 1 -nobody 1 -headervar headers -bodyvar body
+    $tkn perform
+    set ::headers(Content-Length)
+} -cleanup {
+    unset -nocomplain ::headers
+    $tkn cleanup
+} -returnCodes {ok} -result {44}
+
+# cleanup
+::tcltest::cleanupTests
+return
