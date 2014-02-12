@@ -13,6 +13,21 @@ tcltest::test headervar-1 {failonerror OK}  -setup {
     $tkn cleanup
 } -returnCodes {ok} -result {44}
 
+tcltest::test writeheader-1 {writeheader OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    unset -nocomplain errorMsg
+    $tkn configure -url http://localhost:9080/index.html -nobody 1 -writeheader header.txt
+    $tkn perform
+    set f [open header.txt]
+    set hdr [read $f]
+    close $f
+    set hdr
+} -cleanup {
+    catch {file delete header.txt}
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {*Content-Length: 44*}
+
 # cleanup
 ::tcltest::cleanupTests
 return
