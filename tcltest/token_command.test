@@ -198,7 +198,7 @@ tcltest::test token_command-reset-3 {token command reset OK}  -setup {
     $tkn perform
 } -cleanup {
     catch {$tkn cleanup}
-} -returnCodes {error} -result {3}
+} -returnCodes {error} -result {6}
 
 tcltest::test token_command-pause-1 {token command pause too many args}  -setup {
     set tkn [curl::init]
