@@ -29,7 +29,7 @@ tcltest::test progressproc-1 {progressproc OK}  -setup {
     $tkn cleanup
 } -returnCodes {ok} -result {1000000 1000000 0 0}
 
-tcltest::test progressproc-2 {progressproc with puase OK}  -setup {
+tcltest::test progressproc-2 {progressproc with pause OK}  -setup {
     set ::tkn [curl::init]
 } -body {
     unset -nocomplain ::progressresult
@@ -43,6 +43,21 @@ tcltest::test progressproc-2 {progressproc with puase OK}  -setup {
     unset -nocomplain ::i
     $::tkn cleanup
 } -returnCodes {ok} -result {1}
+
+tcltest::test progressproc-3 {progressproc but disabled OK}  -setup {
+    set ::tkn [curl::init]
+} -body {
+    unset -nocomplain ::progressresult
+    set ::i 0
+    $::tkn configure -url http://localhost:9080/large.bin -progressproc progresspauseproc -bodyvar body -noprogress 1
+    $::tkn perform
+    info exists ::progressresult
+} -cleanup {
+    unset -nocomplain ::progressresult
+    unset -nocomplain ::body
+    unset -nocomplain ::i
+    $::tkn cleanup
+} -returnCodes {ok} -result {0}
 
 # cleanup
 ::tcltest::cleanupTests
