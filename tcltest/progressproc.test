@@ -1,0 +1,23 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+proc progressproc {dltotal dlnow ultotal ulnow} {
+     set ::progressresult [list $dltotal $dlnow $ultotal $ulnow]
+}
+
+tcltest::test progressproc-1 {progressproc OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    unset -nocomplain ::progressresult
+    $tkn configure -url http://localhost:9080/large.bin -progressproc progressproc -bodyvar body -noprogress 0
+    $tkn perform
+    set ::progressresult
+} -cleanup {
+    unset -nocomplain ::progressresult
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {1000000 1000000 0 0}
+
+# cleanup
+::tcltest::cleanupTests
+return
