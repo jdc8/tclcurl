@@ -1,0 +1,37 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test version-1 {httpversion none OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -nobody 1 -httpversion none -headervar headers
+    $tkn perform
+    set ::headers(http)
+} -cleanup {
+    unset -nocomplain ::headers
+} -returnCodes {ok} -match glob -result {HTTP/1.*}
+
+tcltest::test version-2 {httpversion 1.0 OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -nobody 1 -httpversion 1.0 -headervar headers -verbose 1
+    $tkn perform
+    set ::headers(http)
+} -cleanup {
+    unset -nocomplain ::headers
+} -returnCodes {ok} -match glob -result {HTTP/1.1*} ;# Server still returns 1.1, expected 1.0.
+
+tcltest::test version-3 {httpversion 1.1 OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -nobody 1 -httpversion 1.1 -headervar headers
+    $tkn perform
+    set ::headers(http)
+} -cleanup {
+    unset -nocomplain ::headers
+} -returnCodes {ok} -match glob -result {HTTP/1.1*}
+
+# cleanup
+::tcltest::cleanupTests
+return
+
