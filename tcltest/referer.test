@@ -1,0 +1,20 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test referer-1 {referer OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    unset -nocomplain errorMsg
+    $tkn configure -url http://localhost:9080/scgi/referer -referer "My Ref" -bodyvar body
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {
+My Ref
+}
+
+# cleanup
+::tcltest::cleanupTests
+return

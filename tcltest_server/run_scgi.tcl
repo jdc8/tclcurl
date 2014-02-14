@@ -18,6 +18,9 @@ proc handle_request {sock headers body} {
 	"/scgi/ua" {
 	    append C [$cgi getRequestParam HTTP_USER_AGENT]
 	}
+	"/scgi/referer" {
+	    append C [$cgi getRequestParam HTTP_REFERER]
+	}
 	default {
 	    append C "From SCGI"
 	}
