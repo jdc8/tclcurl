@@ -6,3 +6,4 @@ fastcgi_temp
 scgi_temp
 uwsgi_temp
 ssl
+certs.pem
