@@ -21,6 +21,9 @@ proc handle_request {sock headers body} {
 	"/scgi/referer" {
 	    append C [$cgi getRequestParam HTTP_REFERER]
 	}
+	"/scgi/httpheader" {
+	    append C [$cgi getRequestParam HTTP_HOLA] " " [$cgi getRequestParam HTTP_ADIOS]
+	}
 	default {
 	    append C "From SCGI"
 	}
