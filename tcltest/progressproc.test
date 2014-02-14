@@ -5,6 +5,17 @@ proc progressproc {dltotal dlnow ultotal ulnow} {
      set ::progressresult [list $dltotal $dlnow $ultotal $ulnow]
 }
 
+proc progresspauseproc {dltotal dlnow ultotal ulnow} {
+    if {$::i == 10} {
+	set ::progressresult(10) [list $dltotal $dlnow $ultotal $ulnow]
+	$::tkn pause
+    } elseif {$::i == 30} {
+	set ::progressresult(30) [list $dltotal $dlnow $ultotal $ulnow]
+	$::tkn resume
+    }
+    incr ::i
+}
+
 tcltest::test progressproc-1 {progressproc OK}  -setup {
     set tkn [curl::init]
 } -body {
@@ -17,6 +28,21 @@ tcltest::test progressproc-1 {progressproc OK}  -setup {
     unset -nocomplain ::body
     $tkn cleanup
 } -returnCodes {ok} -result {1000000 1000000 0 0}
+
+tcltest::test progressproc-2 {progressproc with puase OK}  -setup {
+    set ::tkn [curl::init]
+} -body {
+    unset -nocomplain ::progressresult
+    set ::i 0
+    $::tkn configure -url http://localhost:9080/large.bin -progressproc progresspauseproc -bodyvar body -noprogress 0
+    $::tkn perform
+    expr {$::progressresult(10) eq $::progressresult(30)}
+} -cleanup {
+    unset -nocomplain ::progressresult
+    unset -nocomplain ::body
+    unset -nocomplain ::i
+    $::tkn cleanup
+} -returnCodes {ok} -result {1}
 
 # cleanup
 ::tcltest::cleanupTests
