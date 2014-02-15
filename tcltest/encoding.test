@@ -1,0 +1,58 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test encoding-1 {encoding all OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -encoding all -bodyvar body -headervar header
+    $tkn perform
+    info exists ::header(Content-Encoding)
+} -cleanup {
+    unset -nocomplain ::body
+    unset -nocomplain ::header
+    $tkn cleanup
+} -returnCodes {ok} -result {1}
+
+tcltest::test encoding-2 {encoding gzip OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -encoding gzip -bodyvar body -headervar header
+    $tkn perform
+    set ::header(Content-Encoding)
+} -cleanup {
+    unset -nocomplain ::body
+    unset -nocomplain ::header
+    $tkn cleanup
+} -returnCodes {ok} -result {gzip}
+
+tcltest::test encoding-3 {encoding identity OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -encoding identity -bodyvar body -headervar header
+    $tkn perform
+    info exists ::header(Content-Encoding)
+} -cleanup {
+    unset -nocomplain ::body
+    unset -nocomplain ::header
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test encoding-4 {encoding gzip transfers less data OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/large.html -encoding identity -bodyvar body -headervar header
+    $tkn perform
+    set sz1 [$tkn getinfo sizedownload]
+    $tkn configure -url http://localhost:9080/large.html -encoding gzip -bodyvar body -headervar header
+    $tkn perform
+    set sz2 [$tkn getinfo sizedownload]
+    expr {$sz2 < $sz1}
+} -cleanup {
+    unset -nocomplain ::body
+    unset -nocomplain ::header
+    $tkn cleanup
+} -returnCodes {ok} -result {1}
+
+# cleanup
+::tcltest::cleanupTests
+return

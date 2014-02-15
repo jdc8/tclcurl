@@ -305,7 +305,7 @@ CONST static char *netrcTable[] = {
 };
 
 CONST static char *encodingTable[] = {
-    "identity", "deflated", "all", (char *)NULL
+    "identity", "deflated", "all", "gzip", (char *)NULL
 };
 
 CONST static char *versionInfoTable[] = {
