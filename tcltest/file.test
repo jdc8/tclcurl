@@ -1,0 +1,22 @@
+package require tcltest
+package require base64
+package require -exact TclCurl 7.35.0
+
+tcltest::test file-1 {file OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/index.html -file index.html
+    $tkn perform
+    set f [open index.html r]
+    set body [read $f]
+    close $f
+    set body
+} -cleanup {
+    catch {file delete index.html}
+    $tkn cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+}
+
+# cleanup
+::tcltest::cleanupTests
+return
