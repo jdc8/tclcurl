@@ -27,6 +27,9 @@ proc handle_request {sock headers body} {
 	"/scgi/upload" {
 	    append C "uploaded: " $body
 	}
+	"/scgi/uploadlarge" {
+	    append C "uploaded: " [string length $body]
+	}
 	default {
 	    append C "From SCGI"
 	}

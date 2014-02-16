@@ -1,6 +1,8 @@
 - curl token -command: what when callback failes (see command.test command-2
   test, it returns the callback error message, but not error is raised)
 
+- callback (readproc, writeproc, ... ) as list (with extra args appended by tclcurl)
+
 - return getinfo size as ints
 
 - token configure -timeout decimal values?
