@@ -1,0 +1,24 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test upload-1 {upload file OK}  -setup {
+    set tkn [curl::init]
+    set f [open upload.txt w]
+    puts $f "upload1"
+    close $f
+} -body {
+    $tkn configure -url http://localhost:9080/scgi/upload -bodyvar body -upload 1 -infilesize [file size upload.txt] -infile upload.txt
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    file delete upload.txt
+    $tkn cleanup
+} -returnCodes {ok} -result {
+uploaded: upload1
+
+}
+
+# cleanup
+::tcltest::cleanupTests
+return

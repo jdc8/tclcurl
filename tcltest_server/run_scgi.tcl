@@ -24,6 +24,9 @@ proc handle_request {sock headers body} {
 	"/scgi/httpheader" {
 	    append C [$cgi getRequestParam HTTP_HOLA] " " [$cgi getRequestParam HTTP_ADIOS]
 	}
+	"/scgi/upload" {
+	    append C "uploaded: " $body
+	}
 	default {
 	    append C "From SCGI"
 	}
