@@ -5,7 +5,8 @@ package require nscgi
 
 proc handle_request {sock headers body} {
 
-    puts "REQUEST: $headers"
+    puts "REQUEST: headers: $headers"
+    puts "REQUEST: body: $body"
 
     set cgi [nscgi new headers $headers body $body init_cgi 0]
     $cgi input
@@ -29,6 +30,9 @@ proc handle_request {sock headers body} {
 	}
 	"/scgi/uploadlarge" {
 	    append C "uploaded: " [string length $body]
+	}
+	"/scgi/httppost" {
+	    append C "httppost: [$cgi value firstName missing] [$cgi value lastName missing] [$cgi value nombre missing]"
 	}
 	default {
 	    append C "From SCGI"

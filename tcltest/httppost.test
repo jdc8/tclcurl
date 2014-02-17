@@ -1,0 +1,45 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test httppost-1 {httppost file OK}  -setup {
+    set tkn [curl::init]
+    set f [open httppost.txt w]
+    puts $f "httppost1"
+    close $f
+ } -body {
+    $tkn configure -url http://localhost:9080/scgi/httppost -post 1 -bodyvar body \
+	-httppost [list name "firstName" contents "Andres" contenttype "text/plain" contentheader [list "adios: goodbye"]] \
+        -httppost [list name "lastName" contents "Garcia"] \
+        -httppost [list name "nombre" file "httppost.txt" contenttype "text/html"] \
+        -httppost [list name "submit" contents "send"]
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    file delete httppost.txt
+    $tkn cleanup
+} -returnCodes {ok} -result {
+httppost: Andres Garcia httppost1
+
+}
+
+tcltest::test httppost-2 {httppost file OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url http://localhost:9080/scgi/httppost -post 1 -bodyvar body \
+	-httppost [list name "firstName" contents "Andres" contenttype "text/plain" contentheader [list "adios: goodbye"]] \
+        -httppost [list name "lastName" contents "Garcia"] \
+        -httppost [list name "nombre" bufferName noFile.txt buffer "FileContents" contenttype "text/html"] \
+        -httppost [list name "submit" contents "send"]
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {
+httppost: Andres Garcia FileContents
+}
+
+# cleanup
+::tcltest::cleanupTests
+return
