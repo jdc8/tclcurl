@@ -37,6 +37,10 @@ proc handle_request {sock headers body} {
 	"/scgi/cookie" {
 	    append C "cookie: [$cgi cookie name] [$cgi cookie lastname]"
 	}
+	"/scgi/cookiejar" {
+	    append C "cookiejar"
+	    $cgi setCookie -name name -value jar
+	}
 	default {
 	    append C "From SCGI"
 	}
