@@ -34,6 +34,9 @@ proc handle_request {sock headers body} {
 	"/scgi/httppost" {
 	    append C "httppost: [$cgi value firstName missing] [$cgi value lastName missing] [$cgi value nombre missing]"
 	}
+	"/scgi/cookie" {
+	    append C "cookie: [$cgi cookie name] [$cgi cookie lastname]"
+	}
 	default {
 	    append C "From SCGI"
 	}
