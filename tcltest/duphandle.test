@@ -1,0 +1,21 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test duphandle-1 {duphandle OK}  -setup {
+    set tkn1 [curl::init]
+} -body {
+    $tkn1 configure -url http://localhost:9080/large.bin
+    set tkn2 [$tkn1 duphandle]
+    $tkn2 configure -url http://localhost:9080/index.html -bodyvar body
+    $tkn2 perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn1 cleanup
+    $tkn2 cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+}
+
+# cleanup
+::tcltest::cleanupTests
+return
