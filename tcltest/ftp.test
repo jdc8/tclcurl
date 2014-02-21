@@ -1,0 +1,150 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test ftp-1 {anonymous get OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -bodyvar body1
+    $tkn perform
+    $tkn configure -url "ftp://localhost/file2.txt" -bodyvar body2
+    $tkn perform
+    set result ${::body1}${::body2}
+} -cleanup {
+    unset -nocomplain ::body1
+    unset -nocomplain ::body2
+    file delete httppost.txt
+    $tkn cleanup
+} -returnCodes {ok} -result {File 1
+File 2
+}
+
+tcltest::test ftp-2 {get non existing file}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/non-existing" -bodyvar body
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {error} -result {78}
+
+tcltest::test ftp-3 {get OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/.emacs" -bodyvar body -userpwd $::env(FTPUSERPWD)
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -match glob -result {;==========*Jos Decoster*}
+
+tcltest::test ftp-4 {quote OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -nobody 1 -header 0 -quote [list "pwd"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test ftp-5 {postquote OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -nobody 1 -header 0 -postquote [list "pwd"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test ftp-6 {quote NOK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -nobody 1 -header 0 -quote [list "brol"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {21}
+
+tcltest::test ftp-7 {quote *NOK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -nobody 1 -header 0 -quote [list "*brol"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test ftp-8 {postquote NOK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -nobody 1 -header 0 -postquote [list "brol"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {21}
+
+tcltest::test ftp-9 {postquote *NOK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/file1.txt" -nobody 1 -header 0 -postquote [list "*brol"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test ftp-10 {postquote mkdir OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/" -nobody 1 -header 0 -userpwd $::env(FTPUSERPWD) -postquote [list "mkdir testcurl"]
+    $tkn perform
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {0}
+
+tcltest::test ftp-11 {listonly OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/*" -ftplistonly 1 -bodyvar body
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {file1.txt
+file2.txt
+upload
+}
+
+tcltest::test ftp-12 {listonly OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -url "ftp://localhost/upload/*" -ftplistonly 1 -bodyvar body
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {}
+
+tcltest::test ftp-13 {upload OK}  -setup {
+    set tkn [curl::init]
+    set tkn2 [curl::init]
+    set f [open file3.txt w]
+    puts $f "File 3"
+    close $f
+} -body {
+    $tkn configure -url "ftp://localhost/upload/file3.txt" -nobody 1 -infile file3.txt -upload 1
+    $tkn perform
+    glob /srv/ftp/upload/*
+} -cleanup {
+    file delete file3.txt
+    file delete /srv/ftp/upload/file3.txt
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {/srv/ftp/upload/file3.txt}
+
+# cleanup
+::tcltest::cleanupTests
+return

@@ -1,0 +1,32 @@
+Server for testing TclCurl with ftp:
+
+Server used: vsftpd  (sudo apt-get install vsftpd)
+
+Config changes: /etc/vsftpd.conf
+
+   anonymous_enable=YES
+   anon_mkdir_write_enable=YES
+   write_enable=YES
+   anon_upload_enable=YES
+
+Start/restart the server:
+
+   % sudo /etc/init.d/vsftpd restart
+
+Add files to /srv/ftp directory:
+
+   % tclsh gen_ftp_files.tcl
+   % cp file1.txt file2.txt /srv/ftp
+
+Create upload directory in /srv/ftp and make if writable for group and world:
+
+   % sudo mkdir -p /srv/ftp/upload
+   % sudo chmod g+w /srv/ftp/upload
+   % sudo chmod o+w /srv/ftp/upload
+
+Before running the tests, set environment variable for FTP username and
+passowrd:
+
+   % export FTPUSERPWD=username:password
+
+
