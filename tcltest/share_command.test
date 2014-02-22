@@ -9,6 +9,89 @@ tcltest::test share_command-1 {share command insufficient args}  -setup {
     $tkn cleanup
 } -returnCodes {error} -match regexp -result {wrong # args: should be "scurl[[:digit:]]+ command arg \?arg\?"}
 
+tcltest::test share_command-2 {share command unknown command}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn brol
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {bad command "brol": must be share, unshare, or cleanup}
+
+tcltest::test share_command-3 {share share command missing arg}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn share
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {wrong # args: should be "scurl1 share arg"}
+
+tcltest::test share_command-4 {share share command unknown arg}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn share brol
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {bad data to share/unshare "brol": must be cookies or dns}
+
+tcltest::test share_command-5 {share share command OK}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn share cookies
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {}
+
+tcltest::test share_command-6 {share unshare command missing arg}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn unshare
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {wrong # args: should be "scurl1 unshare arg"}
+
+tcltest::test share_command-7 {share unshare command unknown arg}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn unshare brol
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {bad data to share/unshare "brol": must be cookies or dns}
+
+tcltest::test share_command-8 {share unshare command OK}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn unshare cookies
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {ok} -result {}
+
+tcltest::test share_command-9 {share cleanup too many args}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn cleanup 1 2 3 4 5
+} -cleanup {
+    $tkn cleanup
+} -returnCodes {error} -result {wrong # args: should be "scurl1 cleanup "}
+
+tcltest::test share_command-10 {share cleanup command OK}  -setup {
+    set tkn [curl::shareinit]
+} -body {
+    $tkn cleanup
+} -cleanup {
+} -returnCodes {ok} -result {}
+
+tcltest::test share_command-10 {share command OK}  -setup {
+    set sHandle [curl::shareinit]
+    set easyHandle1 [curl::init]
+    set easyHandle2 [curl::init]
+} -body {
+    $easyHandle1 configure -url http://localhost:9080/index.html -share $sHandle
+    $easyHandle2 configure -url http://localhost:9080/test.html -share $sHandle
+    list [$easyHandle1 perform] [$easyHandle2 perform]
+} -cleanup {
+    $sHandle cleanup
+} -returnCodes {ok} -result {0 0}
+
 # cleanup
 ::tcltest::cleanupTests
 return

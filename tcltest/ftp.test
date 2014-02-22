@@ -97,7 +97,7 @@ tcltest::test ftp-9 {postquote *NOK}  -setup {
 tcltest::test ftp-10 {postquote mkdir OK}  -setup {
     set tkn [curl::init]
 } -body {
-    $tkn configure -url "ftp://localhost/" -nobody 1 -header 0 -userpwd $::env(FTPUSERPWD) -postquote [list "mkdir testcurl"]
+    $tkn configure -url "ftp://localhost" -nobody 1 -header 0 -postquote [list "mkdir upload/testcurl"]
     $tkn perform
 } -cleanup {
     $tkn cleanup

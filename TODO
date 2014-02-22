@@ -1,3 +1,5 @@
+- ftp-10 test fails to mkdir
+
 - -cookiejar only written after $tkn cleanup (see test cookie-3)
 
 - curl token -command: what when callback failes (see command.test command-2

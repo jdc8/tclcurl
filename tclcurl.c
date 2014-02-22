@@ -3952,8 +3952,12 @@ curlShareObjCmd (ClientData clientData, Tcl_Interp *interp,
     switch(tableIndex) {
         case 0:
         case 1:
+	    if (objc != 3) {
+		Tcl_WrongNumArgs(interp,2,objv,"arg");
+		return TCL_ERROR;
+	    }
             if (Tcl_GetIndexFromObj(interp, objv[2], lockData,
-                "data to lock ",TCL_EXACT,&dataIndex)==TCL_ERROR) {
+                "data to share/unshare",TCL_EXACT,&dataIndex)==TCL_ERROR) {
                 return TCL_ERROR;
             }
             switch(dataIndex) {
@@ -3971,6 +3975,10 @@ curlShareObjCmd (ClientData clientData, Tcl_Interp *interp,
             }
             break;
         case 2:
+	    if (objc != 2) {
+		Tcl_WrongNumArgs(interp,2,objv,"");
+		return TCL_ERROR;
+	    }
             Tcl_DeleteCommandFromToken(interp,shcurlData->token);
             break;
     }
