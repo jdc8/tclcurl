@@ -1,0 +1,30 @@
+package require tcltest
+package require -exact TclCurl 7.35.0
+
+tcltest::test proxy-1 {proxy OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -proxy http://localhost -proxyport 9090 -url http://localhost:9080/index.html -bodyvar body
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+}
+
+tcltest::test proxy-2 {proxy OK}  -setup {
+    set tkn [curl::init]
+} -body {
+    $tkn configure -proxy http://localhost:9090 -url http://localhost:9080/index.html -bodyvar body
+    $tkn perform
+    set ::body
+} -cleanup {
+    unset -nocomplain ::body
+    $tkn cleanup
+} -returnCodes {ok} -result {<HTML><BODY>Index for TclCurl</BODY></HTML>
+}
+
+# cleanup
+::tcltest::cleanupTests
+return

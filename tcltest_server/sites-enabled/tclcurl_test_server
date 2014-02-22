@@ -44,3 +44,10 @@ server {
 	}
 
 }
+
+server {
+       listen   9090;
+       location / {
+           proxy_pass       http://localhost:9080/;
+       }
+}
