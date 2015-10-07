@@ -29,7 +29,7 @@ if {[string match "win32*" [::critcl::targetplatform]]} {
     if {[string match "macosx*" [::critcl::targetplatform]]} {
 	critcl::clibraries -lgcc_eh
     } else {
-	critcl::clibraries -lrt -luuid
+	critcl::clibraries -lrt -luuid -lz
     }
 }
 
@@ -589,4 +589,4 @@ critcl::ccommand ::curl::multiinit {cd interp objc objv} {
     return TCL_OK;
 }
 
-package provide TclCurl 7.35.0
+package provide TclCurl 7.41.0

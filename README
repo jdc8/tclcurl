@@ -1,13 +1,12 @@
-openssl build commands: 0.9.8, 1.0.1f
+openssl build commands: 1.0.2
 
-    ./config --prefix=/home/decoster/curl/install/openssl
+    ./config --prefix=/home/jdc/curl/install/openssl shared
     make
     make install
 
-curl build commands Linux: 7.35.0
+curl build commands Linux: 7.41.0
 
-    export LD_LIBRARY_PATH=/home/decoster/curl/install/openssl/lib
-    ./configure --prefix=/home/decoster/curl/install/curl
+    ./configure --prefix=/home/jdc/curl/install/curl --with-ssl=/home/jdc/curl/install/openssl --disable-shared --enable-static
     make
     make install
 
@@ -18,8 +17,7 @@ curl build command Windows: 7.35.0 + VC12_32bit
 
 tclcurl build commands Linux:
 
-    tclsh build.tcl debug -static -curl /home/decoster/curl/install/curl -openssl /home/decoster/curl/install/openssl
-
+    tclsh build.tcl debug -static -curl /home/jdc/install/curl-7.41.0 -openssl /home/jdc/install/openssl
 
 tclcurl build command Windows:
 

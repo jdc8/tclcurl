@@ -1,3 +1,5 @@
+- docs
+
 - ftp-10 test fails to mkdir
 
 - -cookiejar only written after $tkn cleanup (see test cookie-3)
