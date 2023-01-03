@@ -2875,7 +2875,7 @@ curlDebugProcInvoke(CURL *curlHandle, curl_infotype infoType,
     Tcl_Obj             *objv[3];
     char                tclCommand[300];
 
-    snprintf(tclCommand,300,"%s %d %d",curlData->debugProc,infoType,size);
+    snprintf(tclCommand,300,"%s %d %zu",curlData->debugProc,infoType,size);
     tclProcPtr=Tcl_NewStringObj(tclCommand,-1);
 
     objv[0]=Tcl_NewStringObj(curlData->debugProc,-1);

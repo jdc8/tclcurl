@@ -6,7 +6,7 @@ if [[ -z "$NGINXPATH" ]] ; then
     if [ -x /usr/local/sbin/nginx ] ; then
         NGINXPATH=/usr/local/sbin/nginx
     else
-        NGINXPATH=nginx
+        NGINXPATH=/home/josd/Development/install/nginx-1.7.6/sbin/nginx
     fi
 fi
 

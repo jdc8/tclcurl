@@ -1,5 +1,5 @@
 package require tcltest
-package require -exact TclCurl 7.35.0
+package require -exact TclCurl 7.80.0
 
 tcltest::test headervar-1 {failonerror OK}  -setup {
     set tkn [curl::init]

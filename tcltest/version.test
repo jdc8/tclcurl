@@ -1,11 +1,11 @@
 package require tcltest
-package require -exact TclCurl 7.35.0
+package require -exact TclCurl 7.80.0
 
 tcltest::test version-1 {curl::version OK}  -setup {
 } -body {
     curl::version
 } -cleanup {
-} -returnCodes {ok} -match glob -result {TclCurl Version 7.35.0 *}
+} -returnCodes {ok} -match glob -result {TclCurl Version 7.80.0 *}
 
 tcltest::test version-2 {curl::version too many args}  -setup {
 } -body {

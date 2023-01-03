@@ -4,9 +4,9 @@ openssl build commands: 1.0.2
     make
     make install
 
-curl build commands Linux: 7.41.0
+curl build commands Linux: 7.80.0
 
-    ./configure --prefix=/home/jdc/curl/install/curl --with-ssl=/home/jdc/curl/install/openssl --disable-shared --enable-static
+    ./configure --prefix=/home/josd/Development/install/curl-7.80.0 --with-ssl=/home/josd/Development/install/openssl --disable-shared --enable-static
     make
     make install
 
@@ -17,8 +17,11 @@ curl build command Windows: 7.35.0 + VC12_32bit
 
 tclcurl build commands Linux:
 
-    tclsh build.tcl debug -static -curl /home/jdc/install/curl-7.41.0 -openssl /home/jdc/install/openssl
+    tclsh build.tcl debug -static -curl /home/josd/Development/install/curl-7.80.0 -openssl /home/josd/Development/install/openssl
 
 tclcurl build command Windows:
 
     c:\tmp\tclcurl\tclcurl>c:\tcl\bin\tclsh86.exe build.tcl install -static -curl C:\tmp\tclcurl\curl-7.35.0\builds\libcurl-vc10-x86-release-static-ipv6-sspi-spnego -winssl
+
+tclcurl run tests:
+

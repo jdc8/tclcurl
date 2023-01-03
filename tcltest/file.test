@@ -1,6 +1,6 @@
 package require tcltest
 package require base64
-package require -exact TclCurl 7.35.0
+package require -exact TclCurl 7.80.0
 
 tcltest::test file-1 {file OK}  -setup {
     set tkn [curl::init]
